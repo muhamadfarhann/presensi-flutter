@@ -1,6 +1,7 @@
-# presensi
+# My Flutter Project
+<p align="center"><img src="https://flutter.dev/images/flutter-logo-sharing.png" width="400"></p>
 
-A new Flutter project.
+Aplikasi presensi karyawan menggunakan qr code berbasis Location Based Service
 
 ## Getting Started
 
