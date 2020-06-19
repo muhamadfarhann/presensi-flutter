@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:presensi/pages/user_profile.dart';
+import 'package:presensi/pages/welcome_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,6 +17,6 @@ class MyApp extends StatelessWidget {
             bodyText1: GoogleFonts.montserrat(textStyle: textTheme.bodyText1),
           ),
         ),
-        home: UserProfile());
+        home: WelcomePage());
   }
 }

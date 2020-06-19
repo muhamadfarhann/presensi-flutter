@@ -34,6 +34,9 @@ dependencies:
   intl: ^0.16.0
   shared_preferences: any
   auto_size_text: ^2.1.0
+  geolocator: ^5.3.1
+  barcode_scan: ^1.0.0
+  device_info: ^0.4.2+4
 
 dev_dependencies:
   flutter_test:
