@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:presensi/configs/app_config.dart';
 import 'package:presensi/pages/dashboard.dart';
 import 'package:presensi/models/user.dart';
+import 'package:presensi/pages/home.dart';
 import 'package:presensi/src/widget/bezzier_container.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
 
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                  builder: (BuildContext context) => Dashboard(user: user)),
+                  builder: (BuildContext context) => Home(user: user)),
               (Route<dynamic> route) => false);
         } else {
           setState(() {
@@ -110,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
         print(sharedPreferences.getInt("user_id"));
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-                builder: (BuildContext context) => Dashboard(user: user)),
+                builder: (BuildContext context) => Home(user: user)),
             (Route<dynamic> route) => false);
         // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(user: user)));
       } else {

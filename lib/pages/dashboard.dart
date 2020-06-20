@@ -20,6 +20,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  
   SharedPreferences sharedPreferences;
 
 // Membuat Field PostResult dengan value null
@@ -64,10 +65,6 @@ class _DashboardState extends State<Dashboard> {
                 Text(
                   "Category",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
-                ),
-                Text(
-                  "View All",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.0),
                 ),
               ],
             ),
@@ -240,9 +237,10 @@ class _DashboardState extends State<Dashboard> {
           child: CircleAvatar(
             child: Icon(
               icon,
-              size: 16.0,
+              size: 25.0,
               color: Colors.white,
             ),
+            radius: 28.0,
             backgroundColor: Color(0xFF2979FF).withOpacity(0.9),
           ),
         ),
