@@ -8,7 +8,6 @@ import 'package:presensi/models/attendance.dart';
 import 'package:presensi/models/user.dart';
 import 'package:presensi/pages/card_menu.dart';
 import 'package:presensi/pages/login_page.dart';
-import 'package:presensi/pages/scan.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
@@ -25,8 +24,8 @@ class _DashboardState extends State<Dashboard> {
 
 // Membuat Field PostResult dengan value null
   Attendance attendance = null;
-  
-  String result = "";
+
+  String result = "Test";
 
   // Location
   String messageLocation = "";
@@ -36,68 +35,6 @@ class _DashboardState extends State<Dashboard> {
   String deviceId = "";
   // End Device ID
 
-  // Method untuk memulai scan qr
-  _scanQR() async {
-    try {
-        var now = new DateTime.now();
-        var newDt = DateFormat.Hms().format(now);
-        print(now);
-        String qrResult = await BarcodeScanner.scan();
-        
-        // Geolocator
-        final position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-       // print(position);
-        //end of geolocator
-
-        final value = await Attendance.connectToAPI(
-          "1", 
-          now.toString(),
-          newDt.toString(), 
-          "",
-          "",
-          "",
-          "${position.latitude}",
-          "${position.longitude}",
-          "",
-          "",
-        );
-        
-        // device id
-        DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-        AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
-
-        final androidDeviceId = androidDeviceInfo.androidId;
-        print(androidDeviceId);
-        // end of device id
-
-        // mengubah variabel result menjadi hasil scan
-        setState((){
-          SnackBar(
-          content: Text('Success'),
-          action: SnackBarAction(label: 'Berhasil', onPressed: (){} ),
-          );
-        });
-
-    } on PlatformException catch (ex) {
-      if (ex.code == BarcodeScanner.CameraAccessDenied) {
-          result = "Perizinan kamera ditolak";        
-      }  else {
-        setState(() {
-          result = "Error ! $ex";
-        });
-      } 
-    } on FormatException {
-      setState(() {
-        result = "Anda menekan tombol kembali sebelum memindai QR";
-      });
-    } catch (ex) {
-      setState(() {
-        result = "Error ! $ex";
-      });
-    }
-    
-  }
-  
   @override
   void initState() {
     _pref();
@@ -142,7 +79,9 @@ class _DashboardState extends State<Dashboard> {
             height: 200.0,
             child: GridView(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, childAspectRatio: 3 / 2),
+                  mainAxisSpacing: 30.0,
+                  crossAxisCount: 3, 
+                  childAspectRatio: 3 / 2),
               children: <Widget>[
                 gridItem(Icons.equalizer, "Riwayat Absensi", 1),
                 gridItem(Icons.event, "A", 2),
@@ -153,21 +92,21 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  "Latest",
-                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-          ),
-          cardItem(1),
-          cardItem(2),
-          cardItem(3),
-          cardItem(4),
+          // Padding(
+          //   padding: EdgeInsets.all(16.0),
+          //   child: Row(
+          //     children: <Widget>[
+          //       Text(
+          //         "Latest",
+          //         style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+          //       )
+          //     ],
+          //   ),
+          // ),
+          // cardItem(1),
+          // cardItem(2),
+          // cardItem(3),
+          // cardItem(4),
         ],
       ),
     );
@@ -286,10 +225,14 @@ class _DashboardState extends State<Dashboard> {
           onTap: () {
             switch (number) {
               case 1:
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CardMenu()));    
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CardMenu()));
                 break;
               case 2:
-                  _scanQR();
+                _scanQR().then((value) {
+                  print(value);
+                  showSimpleCustomDialog(context);
+                });
                 break;
               default:
             }
@@ -312,5 +255,117 @@ class _DashboardState extends State<Dashboard> {
         ),
       ],
     );
+  }
+
+  void showSimpleCustomDialog(BuildContext context) async {
+    Dialog simpleDialog = await Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Container(
+        height: 300.0,
+        width: 300.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Text(
+                'Anda telah melakukan absensi\nSelamat Bekerja',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  RaisedButton(
+                    color: Colors.blue,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Okay',
+                      style: TextStyle(fontSize: 18.0, color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    showDialog(
+        context: context, builder: (BuildContext context) => simpleDialog);
+}
+
+
+  // Method untuk memulai scan qr
+  Future<String> _scanQR() async {
+    try {
+      var now = new DateTime.now();
+      var newDt = DateFormat.Hms().format(now);
+      print(now);
+      String qrResult = await BarcodeScanner.scan();
+
+      // Geolocator
+      final position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      // print(position);
+      //end of geolocator
+
+      final value = await Attendance.connectToAPI(
+        "1",
+        now.toString(),
+        newDt.toString(),
+        "",
+        "",
+        "",
+        "${position.latitude}",
+        "${position.longitude}",
+        "",
+        "",
+      );
+
+      // device id
+      DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+      AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
+
+      final androidDeviceId = androidDeviceInfo.androidId;
+      print(androidDeviceId);
+      // end of device id
+      result = "Behr";
+      // mengubah variabel result menjadi hasil scan
+      setState(() {
+        result = "sukses";
+        SnackBar(
+          content: Text('Success'),
+          action: SnackBarAction(label: 'Berhasil', onPressed: () {}),
+        );
+      });
+    } on PlatformException catch (ex) {
+      if (ex.code == BarcodeScanner.CameraAccessDenied) {
+        result = "Perizinan kamera ditolak";
+      } else {
+        setState(() {
+          result = "Error ! $ex";
+        });
+      }
+    } on FormatException {
+      setState(() {
+        result = "Anda menekan tombol kembali sebelum memindai QR";
+      });
+    } catch (ex) {
+      setState(() {
+        result = "Error ! $ex";
+      });
+    }
+    return result;
   }
 }

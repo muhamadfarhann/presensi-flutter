@@ -21,7 +21,8 @@ class _UserProfileState extends State<UserProfile> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.more_vert),
+            icon: Icon(Icons.more_vert), 
+            onPressed: (){},
           )
         ],
       ),
