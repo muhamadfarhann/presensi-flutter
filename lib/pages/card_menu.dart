@@ -20,7 +20,7 @@ class _CardMenuState extends State<CardMenu> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String id = sharedPreferences.getInt("employee_id").toString();
     print("ID ANda ${id}");
-    final String url = '${config.apiURL}/api/attendance';
+    final String url = '${config.apiURL}/api/attendance/${id}';
     // MEMINTA DATA KE SERVER DENGAN KETENTUAN YANG DI ACCEPT ADALAH JSON
     // var res = await http
     //       .post(url, body: {

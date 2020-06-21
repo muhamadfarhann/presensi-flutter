@@ -1,14 +1,18 @@
+import 'dart:convert';
+
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:presensi/configs/app_config.dart';
 import 'package:presensi/models/attendance.dart';
 import 'package:presensi/models/user.dart';
 import 'package:presensi/pages/card_menu.dart';
 import 'package:presensi/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class Dashboard extends StatefulWidget {
   final User user;
@@ -20,7 +24,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  
   SharedPreferences sharedPreferences;
 
 // Membuat Field PostResult dengan value null
@@ -77,7 +80,7 @@ class _DashboardState extends State<Dashboard> {
             child: GridView(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   mainAxisSpacing: 30.0,
-                  crossAxisCount: 3, 
+                  crossAxisCount: 3,
                   childAspectRatio: 3 / 2),
               children: <Widget>[
                 gridItem(Icons.equalizer, "Riwayat Absensi", 1),
@@ -227,8 +230,9 @@ class _DashboardState extends State<Dashboard> {
                 break;
               case 2:
                 _scanQR().then((value) {
-                  print(value);
-                  showSimpleCustomDialog(context);
+                  print("Tai");
+                  print(attendance);
+                  print("Farhan");
                 });
                 break;
               default:
@@ -255,7 +259,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void showSimpleCustomDialog(BuildContext context) async {
+  void showSimpleCustomDialog(BuildContext context, String txt) async {
     Dialog simpleDialog = await Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
@@ -269,7 +273,7 @@ class _DashboardState extends State<Dashboard> {
             Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
-                'Anda telah melakukan absensi\nSelamat Bekerja',
+                '${txt}',
                 style: TextStyle(color: Colors.blue),
               ),
             ),
@@ -301,51 +305,61 @@ class _DashboardState extends State<Dashboard> {
     );
     showDialog(
         context: context, builder: (BuildContext context) => simpleDialog);
-}
-
+  }
 
   // Method untuk memulai scan qr
-  Future<String> _scanQR() async {
+  Future<Attendance> _scanQR() async {
     try {
       var now = new DateTime.now();
       var newDt = DateFormat.Hms().format(now);
       print(now);
       String qrResult = await BarcodeScanner.scan();
+      print(qrResult);
 
+      DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+      AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
+      final androidDeviceId = androidDeviceInfo.androidId;
+      print(androidDeviceId);
       // Geolocator
-      final position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      if (qrResult == androidDeviceId) {
+        final position = await Geolocator()
+            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+        Map data = {
+          "employee_id": sharedPreferences.getInt("employee_id").toString(),
+          "date": now.toString(),
+          "time_in": newDt.toString(),
+          "time_out": newDt.toString(),
+          "overdue": "",
+          "note": "",
+          "latitude_in": "${position.latitude}",
+          "longitude_in": "${position.longitude}",
+          "latitude_out": "${position.latitude}",
+          "longitude_out": "${position.longitude}",
+          "device_id": androidDeviceId,
+        };
+
+        var jsonResponse = null;
+        AppConfig config = new AppConfig();
+        var response = await http.post("${config.apiURL}/api/attendance/store",
+            body: data);
+        if (response.statusCode == 200) {
+            jsonResponse = json.decode(response.body);
+            showSimpleCustomDialog(context,jsonResponse['message']);
+        }
+      } else {
+        showSimpleCustomDialog(context,
+            "Tidak Dapat Melakukan Kehadiran, Pastikan Device yang Anda Gunakan Terdaftar");
+      }
       // print(position);
       //end of geolocator
 
-      final value = await Attendance.connectToAPI(
-        "1",
-        now.toString(),
-        newDt.toString(),
-        "",
-        "",
-        "",
-        "${position.latitude}",
-        "${position.longitude}",
-        "",
-        "",
-      );
-
       // device id
-      DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-      AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
 
-      final androidDeviceId = androidDeviceInfo.androidId;
-      print(androidDeviceId);
-      // end of device id
-      result = "Behr";
-      // mengubah variabel result menjadi hasil scan
+      // result = "Sukses";
+      // attendance = value;
       setState(() {
-        result = "sukses";
-        SnackBar(
-          content: Text('Success'),
-          action: SnackBarAction(label: 'Berhasil', onPressed: () {}),
-        );
+        // attendance = value;
       });
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
@@ -358,12 +372,12 @@ class _DashboardState extends State<Dashboard> {
     } on FormatException {
       setState(() {
         result = "Anda menekan tombol kembali sebelum memindai QR";
+        attendance = null;
       });
     } catch (ex) {
       setState(() {
         result = "Error ! $ex";
       });
     }
-    return result;
   }
 }

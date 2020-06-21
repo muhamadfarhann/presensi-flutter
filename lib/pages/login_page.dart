@@ -54,7 +54,9 @@ class _LoginPageState extends State<LoginPage> {
             _isLoading = false;
             _error = null;
           });
-
+          sharedPreferences.setString("token", jsonResponse['token']);
+          sharedPreferences.setInt("user_id", jsonResponse['data']['id']);
+          sharedPreferences.setInt("employee_id", jsonResponse['data']['employee']['id']);
           User user = new User(
               code: jsonResponse['data']['employee']['employee_code'],
               name: jsonResponse['data']['employee']['name'],
