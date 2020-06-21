@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
 
   final List<Widget> screens = [
     Dashboard(),
-    Chat(),
+    // Chat(),
     Profile(),
     Settings(),
   ]; // to store nested tabs
@@ -51,10 +51,10 @@ class _HomeState extends State<Home> {
         child: Container(
           height: 60,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,            
             children: <Widget>[
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   MaterialButton(
                     minWidth: 40,
@@ -83,31 +83,31 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen =
-                            Chat(); // if user taps on this dashboard tab will be active
-                        currentTab = 1;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.chat,
-                          color: currentTab == 1 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'Chats',
-                          style: TextStyle(
-                            color: currentTab == 1 ? Colors.blue : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
+                  // MaterialButton(
+                  //   minWidth: 40,
+                  //   onPressed: () {
+                  //     setState(() {
+                  //       currentScreen =
+                  //           Chat(); // if user taps on this dashboard tab will be active
+                  //       currentTab = 1;
+                  //     });
+                  //   },
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       Icon(
+                  //         Icons.chat,
+                  //         color: currentTab == 1 ? Colors.blue : Colors.grey,
+                  //       ),
+                  //       Text(
+                  //         'Chats',
+                  //         style: TextStyle(
+                  //           color: currentTab == 1 ? Colors.blue : Colors.grey,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
 
@@ -116,31 +116,31 @@ class _HomeState extends State<Home> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen =
-                            Profile(); // if user taps on this dashboard tab will be active
-                        currentTab = 2;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.dashboard,
-                          color: currentTab == 2 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'Profile',
-                          style: TextStyle(
-                            color: currentTab == 2 ? Colors.blue : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // MaterialButton(
+                  //   minWidth: 40,
+                  //   onPressed: () {
+                  //     setState(() {
+                  //       currentScreen =
+                  //           Profile(); // if user taps on this dashboard tab will be active
+                  //       currentTab = 2;
+                  //     });
+                  //   },
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       Icon(
+                  //         Icons.dashboard,
+                  //         color: currentTab == 2 ? Colors.blue : Colors.grey,
+                  //       ),
+                  //       Text(
+                  //         'Profile',
+                  //         style: TextStyle(
+                  //           color: currentTab == 2 ? Colors.blue : Colors.grey,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   MaterialButton(
                     minWidth: 40,
                     onPressed: () {

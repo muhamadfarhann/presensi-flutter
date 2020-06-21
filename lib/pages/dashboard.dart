@@ -5,6 +5,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:presensi/configs/app_config.dart';
@@ -87,9 +88,9 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisCount: 3,
                   childAspectRatio: 3 / 2),
               children: <Widget>[
-                gridItem(Icons.equalizer, "Riwayat Absensi", 1),
-                gridItem(Icons.event, "A", 2),
-                gridItem(Icons.add_shopping_cart, "B", 3),
+                gridItem(AntDesign.calendar, "Riwayat Absensi", 1),
+                gridItem(AntDesign.scan1, "Scan Absen", 2),
+                gridItem(AntDesign.solution1, "Lapor Absen", 3),
                 gridItem(Icons.bluetooth_searching, "C", 4),
                 gridItem(Icons.add_location, "D", 5),
                 gridItem(Icons.keyboard, "E", 6)
