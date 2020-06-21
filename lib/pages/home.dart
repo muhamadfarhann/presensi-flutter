@@ -1,6 +1,7 @@
 import 'package:presensi/models/user.dart';
 import 'package:presensi/pages/dashboard.dart';
 import 'package:presensi/pages/login_page.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:presensi/pages/profile.dart';
 import 'package:presensi/pages/setting.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,8 @@ class _HomeState extends State<Home> {
         bucket: bucket,
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: Icon(AntDesign.scan1),
+        backgroundColor: Color(0xFF2979FF),
         onPressed: () {},
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,9 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  
+  final String assetName = 'icons/Clipboard.svg';
+
   SharedPreferences sharedPreferences;
 
 // Membuat Field PostResult dengan value null
@@ -230,9 +234,6 @@ class _DashboardState extends State<Dashboard> {
                 break;
               case 2:
                 _scanQR().then((value) {
-                  print("Tai");
-                  print(attendance);
-                  print("Farhan");
                 });
                 break;
               default:
@@ -241,11 +242,11 @@ class _DashboardState extends State<Dashboard> {
           child: CircleAvatar(
             child: Icon(
               icon,
-              size: 25.0,
-              color: Colors.white,
+              size: 30.0,
+              color: Color(0xFF2979FF),
             ),
-            radius: 28.0,
-            backgroundColor: Color(0xFF2979FF).withOpacity(0.9),
+            radius: 30.0,
+            backgroundColor: Colors.white,
           ),
         ),
         SizedBox(
@@ -259,52 +260,67 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void showSimpleCustomDialog(BuildContext context, String txt) async {
-    Dialog simpleDialog = await Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Container(
-        height: 300.0,
-        width: 300.0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Text(
-                '${txt}',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  RaisedButton(
-                    color: Colors.blue,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'Okay',
-                      style: TextStyle(fontSize: 18.0, color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    showDialog(
-        context: context, builder: (BuildContext context) => simpleDialog);
+  // void showSimpleCustomDialog(BuildContext context, String txt) async {
+  //   Dialog simpleDialog = await Dialog(
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(12.0),
+  //     ),
+  //     child: Container(
+  //       height: 300.0,
+  //       width: 300.0,
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: <Widget>[
+  //           Padding(
+  //             padding: EdgeInsets.all(15.0),
+  //             child: Text(
+  //               '${txt}',
+  //               style: TextStyle(color: Colors.blue),
+  //             ),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               crossAxisAlignment: CrossAxisAlignment.end,
+  //               children: <Widget>[
+  //                 RaisedButton(
+  //                   color: Colors.blue,
+  //                   onPressed: () {
+  //                     Navigator.of(context).pop();
+  //                   },
+  //                   child: Text(
+  //                     'Okay',
+  //                     style: TextStyle(fontSize: 18.0, color: Colors.white),
+  //                   ),
+  //                 ),
+  //                 SizedBox(
+  //                   width: 20,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  //   showDialog(
+  //       context: context, builder: (BuildContext context) => simpleDialog);
+  // }
+
+  void showAlertDialog(String title, String message, DialogType dialogType,
+      BuildContext context, VoidCallback onOkPress) {
+    AwesomeDialog(
+            context: context,
+            animType: AnimType.TOPSLIDE,
+            dialogType: dialogType,
+            title: title,
+            headerAnimationLoop: false,
+            desc: message,
+            btnOkIcon: Icons.check_circle,
+            btnOkColor: Color(0xFF2979FF),
+            btnOkOnPress: onOkPress)
+        .show();
   }
 
   // Method untuk memulai scan qr
@@ -344,12 +360,21 @@ class _DashboardState extends State<Dashboard> {
         var response = await http.post("${config.apiURL}/api/attendance/store",
             body: data);
         if (response.statusCode == 200) {
-            jsonResponse = json.decode(response.body);
-            showSimpleCustomDialog(context,jsonResponse['message']);
+          jsonResponse = json.decode(response.body);
+          // showSimpleCustomDialog(context,jsonResponse['message']);
+          if (jsonResponse['statusCode'] == 403) {
+            showAlertDialog('Failed', jsonResponse['message'],
+                DialogType.ERROR, context, () {});
+          } else {
+            showAlertDialog('Success', jsonResponse['message'], DialogType.SUCCES,
+              context, () {});
+          }
         }
       } else {
-        showSimpleCustomDialog(context,
-            "Tidak Dapat Melakukan Kehadiran, Pastikan Device yang Anda Gunakan Terdaftar");
+        // showSimpleCustomDialog(context,
+        var message =
+            "Tidak Dapat Melakukan Kehadiran, Pastikan Device yang Anda Gunakan Terdaftar";
+        showAlertDialog('Failed', message, DialogType.ERROR, context, () {});
       }
       // print(position);
       //end of geolocator
