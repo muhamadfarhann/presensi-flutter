@@ -17,26 +17,27 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // Properties & Variables needed
 
-  int currentTab = 0; // to keep track of active tab index
+  int currentTab = 0;
 
   final List<Widget> screens = [
     Dashboard(),
     // Chat(),
     Profile(),
     Settings(),
-  ]; // to store nested tabs
+  ];
 
   final PageStorageBucket bucket = PageStorageBucket();
-// Our first view in viewport
-    Widget currentScreen;
+
+  Widget currentScreen;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageStorage(
-        child: currentScreen == null ? Dashboard(user: this.widget.user) : currentScreen,
+        child: currentScreen == null
+            ? Dashboard(user: this.widget.user)
+            : currentScreen,
         bucket: bucket,
       ),
       floatingActionButton: FloatingActionButton(
@@ -51,7 +52,7 @@ class _HomeState extends State<Home> {
         child: Container(
           height: 60,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,            
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -71,7 +72,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Icon(
-                          Icons.dashboard,
+                          AntDesign.home,
                           color: currentTab == 0 ? Colors.blue : Colors.grey,
                         ),
                         Text(
@@ -154,7 +155,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Icon(
-                          Icons.chat,
+                          AntDesign.profile,
                           color: currentTab == 3 ? Colors.blue : Colors.grey,
                         ),
                         Text(

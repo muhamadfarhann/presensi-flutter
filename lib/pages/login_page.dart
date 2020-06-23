@@ -87,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Sign in
   signIn(String email, password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     Map data = {'email': email, 'password': password};
