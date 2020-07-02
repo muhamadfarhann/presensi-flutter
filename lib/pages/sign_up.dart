@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:presensi/pages/login_page.dart';
 import 'package:presensi/src/widget/bezzier_container.dart';
+import 'package:http/http.dart' as http;
+import 'package:presensi/configs/app_config.dart';
 
 class SignUpPage extends StatefulWidget {
-
-  SignUpPage ({Key key, this.title}) : super(key: key);
+  SignUpPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -24,17 +25,11 @@ class _SignUpPageState extends State<SignUpPage> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(
-                Icons.keyboard_arrow_left, 
-                color: Colors.black
-              ),
+              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
             Text(
               'Kembali',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500
-              ),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -42,7 +37,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}){
+  Widget _entryField(String title, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -50,62 +45,48 @@ class _SignUpPageState extends State<SignUpPage> {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
-          SizedBox(
-            height: 10
-          ),
+          SizedBox(height: 10),
           TextField(
-            obscureText: isPassword,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              fillColor: Color(0xfff3f3f4),
-              filled: true
-            )
-          ),
+              obscureText: isPassword,
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true)),
         ],
-        ),
+      ),
     );
   }
 
-    Widget _submitButton(){
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
+  Widget _submitButton() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(vertical: 15),
+      alignment: Alignment.center,    
+      decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Colors.grey.shade200,
-              offset: Offset(2, 4),
-              blurRadius: 5,
-              spreadRadius: 2
-            )
+                color: Colors.grey.shade200,
+                offset: Offset(2, 4),
+                blurRadius: 5,
+                spreadRadius: 2)
           ],
           gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [Color(0xFF29B6FC), Color(0xFF2979FF)]
-          )
-        ),
-        child: Text(
-          'Daftar sekarang',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white
-          )
-        ),
-      );
-    }
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Color(0xFF29B6FC), Color(0xFF2979FF)])),
+      child: Text('Daftar sekarang',
+          style: TextStyle(fontSize: 13, color: Colors.white)),
+    );
+  }
 
-  Widget _loginAccountLabel(){
+  Widget _loginAccountLabel() {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
@@ -116,10 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
           children: <Widget>[
             Text(
               'Sudah mempunyai akun ?',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600
-              ),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10,
@@ -127,10 +105,9 @@ class _SignUpPageState extends State<SignUpPage> {
             Text(
               'Login',
               style: TextStyle(
-                color: Color(0xfff79c4f),
-                fontSize: 13,
-                fontWeight: FontWeight.w600
-              ),
+                  color: Color(0xfff79c4f),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -138,7 +115,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _title(){
+  Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
@@ -152,11 +129,10 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-
-  Widget _emailPasswordWidget(){
+  Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Username"),
+        _entryField("Name Lengkap"),
         _entryField("Email"),
         _entryField("Password", isPassword: true),
       ],
@@ -164,7 +140,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(
@@ -183,35 +159,36 @@ class _SignUpPageState extends State<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                      height: height * .2
-                    ),
+                    SizedBox(height: height * .2),
                     _title(),
-                    SizedBox(
-                      height: 50
-                    ),
+                    SizedBox(height: 50),
                     _emailPasswordWidget(),
-                    SizedBox(
-                      height: 20
-                    ),
+                    SizedBox(height: 20),
                     _submitButton(),
-                    SizedBox(
-                      height: height * .14
-                    ),
+                    SizedBox(height: height * .14),
                     _loginAccountLabel()
                   ],
                 ),
               ),
             ),
-            Positioned(
-              top: 40,
-              left: 0,
-              child: _backButton()
-            ),
+            Positioned(top: 40, left: 0, child: _backButton()),
           ],
         ),
       ),
     );
   }
 
+  signUp() async {
+    
+    Map data = {
+      "email": "",
+      "pasword": "",
+      "device_id": ""
+    };
+
+    AppConfig config = new AppConfig();
+    var response = await http.post("${config.apiURL}/api/user/create", body: data);
+    print(response.statusCode);
+  }
+  
 }

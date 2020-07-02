@@ -54,8 +54,7 @@ class _WelcomePageState extends State<WelcomePage> {
               code: jsonResponse['data']['employee']['employee_code'],
               name: jsonResponse['data']['employee']['name'],
               position: jsonResponse['data']['employee']['position'],
-              status: jsonResponse['data']['employee']['status'],
-              email: jsonResponse['data']['email']);
+              status: jsonResponse['data']['employee']['status']);
 
           //print(jsonResponse['data']['employee']['name']);
 

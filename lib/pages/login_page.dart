@@ -25,62 +25,48 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    super.initState();
     checkLoginStatus();
+    super.initState();
   }
 
   checkLoginStatus() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String id = sharedPreferences.getInt("user_id").toString();
-    if (sharedPreferences.getInt("user_id") != null) {
+   // String id = sharedPreferences.getInt("employee_id").toString();
+    String token = sharedPreferences.getString("token");
+    if (token != null) {
       // get User
       var jsonResponse = null;
+
+      Map<String, String> requestHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}'
+      };
       var response = await http
-          .post("${config.apiURL}/api/user/get-user", body: {
-            'id': id
-          });
+          .get("${config.apiURL}/api/user/get-profile", headers: requestHeaders);
       if (response.statusCode == 200) {
         jsonResponse = json.decode(response.body);
-        if (jsonResponse != null && jsonResponse['statusCode'] == 200) {
-          // User user = new User(
-          //     code:'', //jsonResponse['data']['employee']['employee_code'],
-          //     name: '',// jsonResponse['data']['employee']['name'],
-          //     position: '',//jsonResponse['data']['employee']['position'],
-          //     status: '',//jsonResponse['data']['employee']['status'],
-          //     email: ''//jsonResponse['data']['email']);
-          // );
 
           setState(() {
             _isLoading = false;
             _error = null;
           });
-          sharedPreferences.setString("token", jsonResponse['token']);
-          sharedPreferences.setInt("user_id", jsonResponse['data']['id']);
-          sharedPreferences.setInt("employee_id", jsonResponse['data']['employee']['id']);
+          sharedPreferences.setInt("employee_id)", jsonResponse['id']);
           User user = new User(
-              code: jsonResponse['data']['employee']['employee_code'],
-              name: jsonResponse['data']['employee']['name'],
-              position: jsonResponse['data']['employee']['position'],
-              status: jsonResponse['data']['employee']['status'],
-              email: jsonResponse['data']['email']);
-
-          //print(jsonResponse['data']['employee']['name']);
-
+            code: jsonResponse['employee_code'],
+            name: jsonResponse['name'],
+            position: jsonResponse['position'],
+            status: jsonResponse['status'],
+          );
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                   builder: (BuildContext context) => Home(user: user)),
               (Route<dynamic> route) => false);
-        } else {
-          setState(() {
-            _isLoading = false;
-            _error = jsonResponse['message'];
-          });
-          print(response.body);
-        }
+      
       } else {
         setState(() {
           _isLoading = false;
-          _error = "Kumaha Maneh";
+          _error = "Terjadi Kesalahan Sistem";
         });
         print(response.body);
       }
@@ -90,45 +76,59 @@ class _LoginPageState extends State<LoginPage> {
   // Sign in
   signIn(String email, password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Map data = {'email': email, 'password': password};
+    
+    Map data = {
+      'username': email,
+      'password': password,
+      'client_id': '2',
+      'grant_type': 'password',
+      'client_secret': '56kTBcFFZOwnFz9KSE72soNQOevnyIZR2DHz4HBZ'
+    };
 
     var jsonResponse = null;
+
     var response =
-        await http.post("${config.apiURL}/api/user/auth", body: data);
-    if (response.statusCode == 200) {
+        await http.post("${config.apiURL}/oauth/token", body: data);
+        
       jsonResponse = json.decode(response.body);
-      if (jsonResponse != null && jsonResponse['statusCode'] == 200) {
-        setState(() {
-          _isLoading = false;
-          _error = null;
-        });
-        sharedPreferences.setString("token", jsonResponse['token']);
-        sharedPreferences.setInt("user_id", jsonResponse['data']['id']);
-        sharedPreferences.setInt("employee_id", jsonResponse['data']['employee']['id']);
-        User user = new User(
-            code: jsonResponse['data']['employee']['employee_code'],
-            name: jsonResponse['data']['employee']['name'],
-            position: jsonResponse['data']['employee']['position'],
-            status: jsonResponse['data']['employee']['status'],
-            email: jsonResponse['data']['email']);
-        print(sharedPreferences.getInt("user_id"));
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (BuildContext context) => Home(user: user)),
-            (Route<dynamic> route) => false);
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(user: user)));
-      } else {
-        setState(() {
-          _isLoading = false;
-          _error = jsonResponse['message'];
-        });
-        print(response.body);
-      }
+    if (response.statusCode == 200) {
+      setState(() {
+        _isLoading = false;
+        _error = null;
+      });
+      sharedPreferences.setString("token", jsonResponse['access_token']);
+
+      var token = sharedPreferences.getString('token');
+
+      Map<String, String> requestHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}'
+      };
+
+      final response2 = await http.get(
+          '${config.apiURL}/api/user/get-profile',
+          headers: requestHeaders);
+      final responseJson2 = json.decode(response2.body);
+      sharedPreferences.setInt("employee_id", responseJson2['id']);
+      print(sharedPreferences.getInt("employee_id").toString());
+      User user = new User(
+        code: responseJson2['employee_code'],
+        name: responseJson2['name'],
+        position: responseJson2['position'],
+        status: responseJson2['status'],
+      );
+
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) => Home(user: user)),
+          (Route<dynamic> route) => false);
     } else {
       setState(() {
         _isLoading = false;
+        _error = jsonResponse["message"];
       });
-      print(response.body);
+      // print(response.body);
     }
   }
 
@@ -219,16 +219,23 @@ class _LoginPageState extends State<LoginPage> {
               },
         textColor: Colors.white,
         padding: EdgeInsets.all(0.0),
+       
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: <Color>[Color(0xFF29B6FC), Color(0xFF2979FF)],
+            
             ),
+          
           ),
-          padding: EdgeInsets.only(left: 100, right: 100, top: 10, bottom: 10),
+        //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          width: double.infinity,
+          alignment: Alignment.center,
           child: Text(
             'Login',
-            style: TextStyle(fontSize: 15),
+            style: TextStyle(fontSize: 17),
+            
           ),
         ),
       ),
@@ -382,7 +389,7 @@ class _LoginPageState extends State<LoginPage> {
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
         child: Row(
-          children: <Widget>[ 
+          children: <Widget>[
             Padding(
               padding: EdgeInsets.only(right: 8.0),
               child: Icon(Icons.error_outline, color: Colors.white),

@@ -243,10 +243,10 @@ class _DashboardState extends State<Dashboard> {
           child: CircleAvatar(
             child: Icon(
               icon,
-              size: 30.0,
+              size: 26.0,
               color: Color(0xFF2979FF),
             ),
-            radius: 30.0,
+            radius: 26.0,
             backgroundColor: Colors.white,
           ),
         ),
@@ -254,8 +254,7 @@ class _DashboardState extends State<Dashboard> {
           height: 10.0,
         ),
         Text(
-          name,
-          style: TextStyle(),
+          name
         ),
       ],
     );
@@ -329,22 +328,26 @@ class _DashboardState extends State<Dashboard> {
     try {
       var now = new DateTime.now();
       var newDt = DateFormat.Hms().format(now);
-      print(now);
+      var formatter = new DateFormat('yyyy-MM-dd');
+      String myDate = formatter.format(now);
+
       String qrResult = await BarcodeScanner.scan();
-      print(qrResult);
+      // print(qrResult);
+      print("Hasil QR: ${qrResult}");
 
       DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
       AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
       final androidDeviceId = androidDeviceInfo.androidId;
-      print(androidDeviceId);
+      print("Dev ID: ${androidDeviceId}");
+  
       // Geolocator
-      if (qrResult == androidDeviceId) {
+      if (qrResult == myDate) {
         final position = await Geolocator()
             .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
         Map data = {
           "employee_id": sharedPreferences.getInt("employee_id").toString(),
-          "date": now.toString(),
+          "date": myDate.toString(),
           "time_in": newDt.toString(),
           "time_out": newDt.toString(),
           "overdue": "",
@@ -360,7 +363,12 @@ class _DashboardState extends State<Dashboard> {
         AppConfig config = new AppConfig();
         var response = await http.post("${config.apiURL}/api/attendance/store",
             body: data);
+            
+         print(response.statusCode);
+         print("Hasil Flutter: ${myDate}");
+         
         if (response.statusCode == 200) {
+           
           jsonResponse = json.decode(response.body);
           // showSimpleCustomDialog(context,jsonResponse['message']);
           if (jsonResponse['statusCode'] == 403) {
@@ -374,7 +382,7 @@ class _DashboardState extends State<Dashboard> {
       } else {
         // showSimpleCustomDialog(context,
         var message =
-            "Tidak Dapat Melakukan Kehadiran, Pastikan Device yang Anda Gunakan Terdaftar";
+            "Tidak Dapat Melakukan Kehadiran, Pastikan QR Code Sesuai";
         showAlertDialog('Failed', message, DialogType.ERROR, context, () {});
       }
       // print(position);
