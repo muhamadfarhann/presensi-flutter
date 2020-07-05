@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:presensi/pages/login_page.dart';
 import 'package:presensi/src/widget/bezzier_container.dart';
@@ -14,6 +18,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  bool _isLoading = false;
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -37,7 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryFieldNIP(String title, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -49,6 +54,53 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           SizedBox(height: 10),
           TextField(
+              controller: nipController,
+              obscureText: isPassword,
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true)),
+        ],
+      ),
+    );
+  }
+
+  Widget _entryFieldEmail(String title, {bool isPassword = false}) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(height: 10),
+          TextField(
+              controller: emailController,
+              obscureText: isPassword,
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true)),
+        ],
+      ),
+    );
+  }
+
+  Widget _entryFieldPassword(String title, {bool isPassword = true}) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(height: 10),
+          TextField(
+              controller: passwordController,
               obscureText: isPassword,
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -63,22 +115,35 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,    
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Color(0xFF29B6FC), Color(0xFF2979FF)])),
-      child: Text('Daftar sekarang',
-          style: TextStyle(fontSize: 13, color: Colors.white)),
+      alignment: Alignment.center,
+      child: RaisedButton(
+        onPressed: emailController.text == "" || passwordController.text == ""
+            ? null
+            : () {
+                setState(() {
+                  _isLoading = true;
+                });
+                signUp(nipController.text, emailController.text,
+                    passwordController.text);
+              },
+        textColor: Colors.white,
+        padding: EdgeInsets.all(0.0),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: <Color>[Color(0xFF29B6FC), Color(0xFF2979FF)],
+            ),
+          ),
+          //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          width: double.infinity,
+          alignment: Alignment.center,
+          child: Text(
+            'Daftar',
+            style: TextStyle(fontSize: 17),
+          ),
+        ),
+      ),
     );
   }
 
@@ -132,9 +197,9 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Name Lengkap"),
-        _entryField("Email"),
-        _entryField("Password", isPassword: true),
+        _entryFieldNIP("NIP"),
+        _entryFieldEmail("Email"),
+        _entryFieldPassword("Password", isPassword: true),
       ],
     );
   }
@@ -178,17 +243,51 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  signUp() async {
-    
-    Map data = {
-      "email": "",
-      "pasword": "",
-      "device_id": ""
-    };
+  final TextEditingController nipController = new TextEditingController();
+  final TextEditingController emailController = new TextEditingController();
+  final TextEditingController passwordController = new TextEditingController();
 
+  signUp(String employeeCode, email, password) async {
+    print(password);
+    DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
+    final androidDeviceId = androidDeviceInfo.androidId;
+
+    Map data = {
+      "employee_code": employeeCode,
+      "email": email,
+      "password": password,
+      "device_id": androidDeviceId
+    };
+    print(data);
+    var jsonResponse = null;
     AppConfig config = new AppConfig();
-    var response = await http.post("${config.apiURL}/api/user/create", body: data);
-    print(response.statusCode);
+    var response =
+        await http.post("${config.apiURL}/api/user/create", body: data);
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("Your Password Is : ${jsonResponse['message']}");
+      // showAlertDialog('Success', jsonResponse['message'], DialogType.SUCCES,
+      //     context, () {});
+    } else {
+      jsonResponse = json.decode(response.body);
+      showAlertDialog(
+          'Failed', jsonResponse['message'], DialogType.ERROR, context, () {});
+    }
   }
-  
+
+  void showAlertDialog(String title, String message, DialogType dialogType,
+      BuildContext context, VoidCallback onOkPress) {
+    AwesomeDialog(
+            context: context,
+            animType: AnimType.TOPSLIDE,
+            dialogType: dialogType,
+            title: title,
+            headerAnimationLoop: false,
+            desc: message,
+            btnOkIcon: Icons.check_circle,
+            btnOkColor: Color(0xFF2979FF),
+            btnOkOnPress: onOkPress)
+        .show();
+  }
 }

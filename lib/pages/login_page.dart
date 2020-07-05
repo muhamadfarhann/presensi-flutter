@@ -4,6 +4,7 @@ import 'package:presensi/configs/app_config.dart';
 import 'package:presensi/pages/dashboard.dart';
 import 'package:presensi/models/user.dart';
 import 'package:presensi/pages/home.dart';
+import 'package:presensi/pages/sign_up.dart';
 import 'package:presensi/src/widget/bezzier_container.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
 
   checkLoginStatus() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-   // String id = sharedPreferences.getInt("employee_id").toString();
+    // String id = sharedPreferences.getInt("employee_id").toString();
     String token = sharedPreferences.getString("token");
     if (token != null) {
       // get User
@@ -42,27 +43,28 @@ class _LoginPageState extends State<LoginPage> {
         'Accept': 'application/json',
         'Authorization': 'Bearer ${token}'
       };
-      var response = await http
-          .get("${config.apiURL}/api/user/get-profile", headers: requestHeaders);
+      var response = await http.get("${config.apiURL}/api/user/get-profile",
+          headers: requestHeaders);
       if (response.statusCode == 200) {
         jsonResponse = json.decode(response.body);
 
-          setState(() {
-            _isLoading = false;
-            _error = null;
-          });
-          sharedPreferences.setInt("employee_id)", jsonResponse['id']);
-          User user = new User(
-            code: jsonResponse['employee_code'],
-            name: jsonResponse['name'],
-            position: jsonResponse['position'],
-            status: jsonResponse['status'],
-          );
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (BuildContext context) => Home(user: user)),
-              (Route<dynamic> route) => false);
-      
+        setState(() {
+          _isLoading = false;
+          _error = null;
+        });
+        sharedPreferences.setInt(
+            "employee_id)", jsonResponse['employee']['id']);
+        User user = new User(
+          code: jsonResponse['employee']['employee_code'],
+          name: jsonResponse['employee']['name'],
+          position: jsonResponse['employee']['position'],
+          status: jsonResponse['employee']['status'],
+          email: jsonResponse['email'],
+        );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (BuildContext context) => Home(user: user)),
+            (Route<dynamic> route) => false);
       } else {
         setState(() {
           _isLoading = false;
@@ -76,21 +78,20 @@ class _LoginPageState extends State<LoginPage> {
   // Sign in
   signIn(String email, password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    
+
     Map data = {
       'username': email,
       'password': password,
       'client_id': '2',
       'grant_type': 'password',
-      'client_secret': '56kTBcFFZOwnFz9KSE72soNQOevnyIZR2DHz4HBZ'
+      'client_secret': 'SW9uL4QFXM81iHO85ioiIVazyGfLopXpWqmQK47M'
     };
 
     var jsonResponse = null;
 
-    var response =
-        await http.post("${config.apiURL}/oauth/token", body: data);
-        
-      jsonResponse = json.decode(response.body);
+    var response = await http.post("${config.apiURL}/oauth/token", body: data);
+
+    jsonResponse = json.decode(response.body);
     if (response.statusCode == 200) {
       setState(() {
         _isLoading = false;
@@ -106,17 +107,18 @@ class _LoginPageState extends State<LoginPage> {
         'Authorization': 'Bearer ${token}'
       };
 
-      final response2 = await http.get(
-          '${config.apiURL}/api/user/get-profile',
+      final response2 = await http.get('${config.apiURL}/api/user/get-profile',
           headers: requestHeaders);
       final responseJson2 = json.decode(response2.body);
-      sharedPreferences.setInt("employee_id", responseJson2['id']);
+      sharedPreferences.setInt("employee_id", responseJson2['employee']['id']);
       print(sharedPreferences.getInt("employee_id").toString());
+      print(responseJson2['employee']['employee_code']);
       User user = new User(
-        code: responseJson2['employee_code'],
-        name: responseJson2['name'],
-        position: responseJson2['position'],
-        status: responseJson2['status'],
+        code: responseJson2['employee']['employee_code'],
+        name: responseJson2['employee']['name'],
+        position: responseJson2['employee']['position'],
+        status: responseJson2['employee']['status'],
+        email: responseJson2['email'],
       );
 
       Navigator.of(context).pushAndRemoveUntil(
@@ -219,23 +221,19 @@ class _LoginPageState extends State<LoginPage> {
               },
         textColor: Colors.white,
         padding: EdgeInsets.all(0.0),
-       
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: <Color>[Color(0xFF29B6FC), Color(0xFF2979FF)],
-            
             ),
-          
           ),
-        //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
+          //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           width: double.infinity,
           alignment: Alignment.center,
           child: Text(
             'Login',
             style: TextStyle(fontSize: 17),
-            
           ),
         ),
       ),
@@ -330,7 +328,7 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Dashboard()));
+            context, MaterialPageRoute(builder: (context) => SignUpPage()));
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
@@ -340,7 +338,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Don\'t have an account ?',
+              'Belum Memiliki Akun ?',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(

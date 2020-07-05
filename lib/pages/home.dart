@@ -17,14 +17,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   int currentTab = 0;
 
   final List<Widget> screens = [
     Dashboard(),
     // Chat(),
     Profile(),
-    Settings(),
+    // Settings(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -146,8 +145,10 @@ class _HomeState extends State<Home> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen =
-                            Settings(); // if user taps on this dashboard tab will be active
+                        currentScreen = Profile(
+                            user: this
+                                .widget
+                                .user); // if user taps on this dashboard tab will be active
                         currentTab = 3;
                       });
                     },
@@ -155,11 +156,11 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Icon(
-                          AntDesign.profile,
+                          AntDesign.user,
                           color: currentTab == 3 ? Colors.blue : Colors.grey,
                         ),
                         Text(
-                          'Settings',
+                          'Profil',
                           style: TextStyle(
                             color: currentTab == 3 ? Colors.blue : Colors.grey,
                           ),

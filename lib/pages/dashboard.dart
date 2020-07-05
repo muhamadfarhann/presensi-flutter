@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:device_info/device_info.dart';
@@ -26,7 +25,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  
   final String assetName = 'icons/Clipboard.svg';
 
   SharedPreferences sharedPreferences;
@@ -234,8 +232,7 @@ class _DashboardState extends State<Dashboard> {
                     MaterialPageRoute(builder: (context) => CardMenu()));
                 break;
               case 2:
-                _scanQR().then((value) {
-                });
+                _scanQR().then((value) {});
                 break;
               default:
             }
@@ -253,9 +250,7 @@ class _DashboardState extends State<Dashboard> {
         SizedBox(
           height: 10.0,
         ),
-        Text(
-          name
-        ),
+        Text(name),
       ],
     );
   }
@@ -339,7 +334,7 @@ class _DashboardState extends State<Dashboard> {
       AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
       final androidDeviceId = androidDeviceInfo.androidId;
       print("Dev ID: ${androidDeviceId}");
-  
+      print("Hasil Flutter: ${myDate}");
       // Geolocator
       if (qrResult == myDate) {
         final position = await Geolocator()
@@ -363,20 +358,18 @@ class _DashboardState extends State<Dashboard> {
         AppConfig config = new AppConfig();
         var response = await http.post("${config.apiURL}/api/attendance/store",
             body: data);
-            
-         print(response.statusCode);
-         print("Hasil Flutter: ${myDate}");
-         
+
+        print(response.statusCode);
+
         if (response.statusCode == 200) {
-           
           jsonResponse = json.decode(response.body);
-          // showSimpleCustomDialog(context,jsonResponse['message']);
+
           if (jsonResponse['statusCode'] == 403) {
-            showAlertDialog('Failed', jsonResponse['message'],
-                DialogType.ERROR, context, () {});
+            showAlertDialog('Failed', jsonResponse['message'], DialogType.ERROR,
+                context, () {});
           } else {
-            showAlertDialog('Success', jsonResponse['message'], DialogType.SUCCES,
-              context, () {});
+            showAlertDialog('Success', jsonResponse['message'],
+                DialogType.SUCCES, context, () {});
           }
         }
       } else {
