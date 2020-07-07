@@ -54,12 +54,26 @@ class _LoginPageState extends State<LoginPage> {
         });
         sharedPreferences.setInt(
             "employee_id)", jsonResponse['employee']['id']);
+
+        String timeIn = 'Belum Absen';
+        String timeOut = 'Belum Absen';
+        
+        if(jsonResponse['employee']['attendance'].length != 0){
+          timeIn = jsonResponse['employee']['attendance'][0]['time_in'];
+          timeOut = jsonResponse['employee']['attendance'][0]['time_out'].toString() != null ? jsonResponse['employee']['attendance'][0]['time_out'] : "Belum Absen";
+        }
+
         User user = new User(
           code: jsonResponse['employee']['employee_code'],
           name: jsonResponse['employee']['name'],
           position: jsonResponse['employee']['position'],
           status: jsonResponse['employee']['status'],
           email: jsonResponse['email'],
+          phone: jsonResponse['employee']['phone'],
+          address: jsonResponse['employee']['address'],
+          photo: jsonResponse['employee']['photo'],
+          timeIn: timeIn.toString(),
+          timeOut: timeOut.toString(),
         );
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
@@ -112,13 +126,27 @@ class _LoginPageState extends State<LoginPage> {
       final responseJson2 = json.decode(response2.body);
       sharedPreferences.setInt("employee_id", responseJson2['employee']['id']);
       print(sharedPreferences.getInt("employee_id").toString());
-      print(responseJson2['employee']['employee_code']);
+      print(responseJson2);
+
+      String timeIn = 'Belum Absen';
+      String timeOut = 'Belum Absen';
+      
+        if(responseJson2['employee']['attendance'].length != 0){
+          timeIn = responseJson2['employee']['attendance'][0]['time_in'];
+          timeOut = responseJson2['employee']['attendance'][0]['time_out'] ? responseJson2['employee']['attendance'][0]['time_out'].toString() : "Belum Absen";
+        }
+
       User user = new User(
         code: responseJson2['employee']['employee_code'],
         name: responseJson2['employee']['name'],
         position: responseJson2['employee']['position'],
         status: responseJson2['employee']['status'],
         email: responseJson2['email'],
+        phone: responseJson2['employee']['phone'],
+        address: responseJson2['employee']['address'],
+        photo: responseJson2['employee']['photo'],
+        timeIn: timeIn.toString(),
+        timeOut: timeOut.toString(),
       );
 
       Navigator.of(context).pushAndRemoveUntil(

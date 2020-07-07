@@ -1,8 +1,3 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import 'package:presensi/configs/app_config.dart';
-
 // Class PostResult
 class Attendance {
 

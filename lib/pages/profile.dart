@@ -1,10 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:presensi/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:presensi/configs/app_config.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+
   final User user;
 
   const Profile({Key key, this.user}) : super(key: key);
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+
+class _ProfileState extends State<Profile> {
+
+  @override
+  void initState() {
+    getProfile();
+    super.initState();
+  }
+
+  AppConfig config = new AppConfig();
+
+
+  getProfile() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    // String id = sharedPreferences.getInt("employee_id").toString();
+    String token = sharedPreferences.getString("token");
+    if (token != null) {
+      // get User
+      var jsonResponse = null;
+
+      Map<String, String> requestHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}'
+      };
+      var response = await http.get("${config.apiURL}/api/user/get-profile",
+          headers: requestHeaders);
+      if (response.statusCode == 200) {
+        jsonResponse = json.decode(response.body);
+
+        sharedPreferences.setInt(
+            "employee_id)", jsonResponse['employee']['id']);
+
+        print(jsonResponse['employee']['attendance']);
+
+        String timeIn = 'Belum Absen';
+        String timeOut = 'Belum Absen';
+
+        if(jsonResponse['employee']['attendance'].length != 0){
+          timeIn = jsonResponse['employee']['attendance'][0]['time_in'].toString();
+          timeOut = jsonResponse['employee']['attendance'][0]['time_out'].toString() != null ? jsonResponse['employee']['attendance'][0]['time_out'].toString() : "Belum Absen";
+        }
+
+        User user = new User(
+          code: jsonResponse['employee']['employee_code'],
+          name: jsonResponse['employee']['name'],
+          position: jsonResponse['employee']['position'],
+          status: jsonResponse['employee']['status'],
+          email: jsonResponse['email'],
+          phone: jsonResponse['employee']['phone'],
+          address: jsonResponse['employee']['address'],
+          photo: jsonResponse['employee']['photo'],
+          timeIn: timeIn,
+          timeOut: timeOut,
+        );
+
+        setState(() {
+          user = user;
+        });
+      }
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     double widthC = MediaQuery.of(context).size.width * 100;
@@ -17,9 +90,7 @@ class Profile extends StatelessWidget {
               // build Top Section of Profile (include : Image & main info & card of info[photos ... ] )
               //==========================================================================================
               _buildHeader(context, widthC),
-
               SizedBox(height: 10.0),
-
               //==========================================================================================
               //  build Bottom Section of Profile (include : email - phone number - about - location )
               //==========================================================================================
@@ -87,37 +158,36 @@ class Profile extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  new Column(
+                  Column(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         'Jam Masuk',
-                        style: new TextStyle(
+                        style: TextStyle(
                             fontSize: 15.0,
                             color: Colors.black,
                             fontWeight: FontWeight.w400),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
-                        child: new Text(
-                          '3.5k',
-                          style: new TextStyle(
+                        child: Text(
+                          '${this.widget.user.timeIn}',
+                          style: TextStyle(
                               fontSize: 15.0, color: Color(0xFF2979FF)),
                         ),
                       ),
                     ],
                   ),
-                  new Column(
+                  Column(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         'Jam Keluar',
-                        style:
-                            new TextStyle(fontSize: 15.0, color: Colors.black),
+                        style: TextStyle(fontSize: 15.0, color: Colors.black),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
-                        child: new Text(
-                          '150',
-                          style: new TextStyle(
+                        child: Text(
+                          '${this.widget.user.timeOut}',
+                          style: TextStyle(
                               fontSize: 15.0, color: Color(0xFF2979FF)),
                         ),
                       ),
@@ -139,13 +209,13 @@ class Profile extends StatelessWidget {
       alignment: AlignmentDirectional.center,
       child: Column(
         children: <Widget>[
-          Text('${this.user.name}',
+          Text('${this.widget.user.name}',
               style: TextStyle(
                   fontSize: 20,
                   color: Colors.white,
                   fontWeight: FontWeight.bold)),
           SizedBox(height: 10),
-          Text('${this.user.status} - ${this.user.position}',
+          Text('${this.widget.user.status} - ${this.widget.user.position}',
               style: TextStyle(
                   color: Colors.grey.shade50, fontStyle: FontStyle.italic))
         ],
@@ -153,7 +223,7 @@ class Profile extends StatelessWidget {
     );
   }
 
-  Widget _buildInfo(BuildContext context, double width) {
+  Widget _buildInfo(BuildContext context, double width){
     return Container(
         padding: EdgeInsets.all(10),
         child: Card(
@@ -169,7 +239,7 @@ class Profile extends StatelessWidget {
                       leading: Icon(Icons.email, color: Color(0xFF2979FF)),
                       title: Text("Email",
                           style: TextStyle(fontSize: 18, color: Colors.black)),
-                      subtitle: Text("${this.user.email}",
+                      subtitle: Text("${this.widget.user.email}",
                           style:
                               TextStyle(fontSize: 15, color: Colors.black54)),
                     ),
@@ -178,7 +248,7 @@ class Profile extends StatelessWidget {
                       leading: Icon(Icons.phone, color: Color(0xFF2979FF)),
                       title: Text("Telepon",
                           style: TextStyle(fontSize: 18, color: Colors.black)),
-                      subtitle: Text("087722250220",
+                      subtitle: Text("${this.widget.user.phone}",
                           style:
                               TextStyle(fontSize: 15, color: Colors.black54)),
                     ),
@@ -189,7 +259,7 @@ class Profile extends StatelessWidget {
                       leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                       title: Text("Alamat",
                           style: TextStyle(fontSize: 18, color: Colors.black)),
-                      subtitle: Text("Jl. Babakan Ciamis",
+                      subtitle: Text("${this.widget.user.address}",
                           style:
                               TextStyle(fontSize: 15, color: Colors.black54)),
                     ),

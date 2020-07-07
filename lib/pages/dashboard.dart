@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class Dashboard extends StatefulWidget {
+  
   final User user;
 
   const Dashboard({Key key, this.user}) : super(key: key);
@@ -25,7 +26,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final String assetName = 'icons/Clipboard.svg';
 
   SharedPreferences sharedPreferences;
 
@@ -113,6 +113,36 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
     );
+  }
+
+  TextEditingController _textFieldController = TextEditingController();
+  
+  _displayDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Lapor Ketidakhadiran'),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: "Keterangan"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Submit'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   cardItem(image) {
@@ -233,6 +263,9 @@ class _DashboardState extends State<Dashboard> {
                 break;
               case 2:
                 _scanQR().then((value) {});
+                break;
+              case 3:
+                _displayDialog(context);
                 break;
               default:
             }
