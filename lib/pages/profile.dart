@@ -6,28 +6,25 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Profile extends StatefulWidget {
+  // final User user;
 
-  final User user;
-
-  const Profile({Key key, this.user}) : super(key: key);
+  // const Profile({Key key, this.user}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
 }
 
-
 class _ProfileState extends State<Profile> {
-
+  Future<User> user;
   @override
   void initState() {
-    getProfile();
     super.initState();
+    user = getUser();
   }
 
   AppConfig config = new AppConfig();
 
-
-  getProfile() async {
+  Future<User> getUser() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     // String id = sharedPreferences.getInt("employee_id").toString();
     String token = sharedPreferences.getString("token");
@@ -53,9 +50,11 @@ class _ProfileState extends State<Profile> {
         String timeIn = 'Belum Absen';
         String timeOut = 'Belum Absen';
 
-        if(jsonResponse['employee']['attendance'].length != 0){
-          timeIn = jsonResponse['employee']['attendance'][0]['time_in'].toString();
-          timeOut = jsonResponse['employee']['attendance'][0]['time_out'].toString() != null ? jsonResponse['employee']['attendance'][0]['time_out'].toString() : "Belum Absen";
+        if (jsonResponse['employee']['attendance'] != null) {
+          timeIn = jsonResponse['employee']['attendance']['time_in'].toString();
+          timeOut = jsonResponse['employee']['attendance']['time_out'] != null
+              ? jsonResponse['employee']['attendance']['time_out'].toString()
+              : "Belum Absen";
         }
 
         User user = new User(
@@ -71,13 +70,13 @@ class _ProfileState extends State<Profile> {
           timeOut: timeOut,
         );
 
-        setState(() {
-          user = user;
-        });
+        return user;
+      } else {
+        throw Exception('Failed to load Data');
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     double widthC = MediaQuery.of(context).size.width * 100;
@@ -112,27 +111,36 @@ class _ProfileState extends State<Profile> {
           margin: const EdgeInsets.only(top: 50),
           child: Column(
             children: <Widget>[
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                color: Color(0xFF2979FF),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 6.0,
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(80),
-                  ),
+              CircleAvatar(
+                radius: 55,
+                backgroundColor: Colors.white,
+                child: CircleAvatar(
+                  radius: 54,
+                  // backgroundImage: NetworkImage("${config.apiURL}/images/${this.widget.user.photo}")
                 ),
               ),
+
+              // Card(
+              //   elevation: 2,
+              //   shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(100),
+              //   ),
+              //   color: Color(0xFF2979FF),
+              //   child: Container(
+              //     width: 100,
+              //     height: 100,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(100),
+              //       border: Border.all(
+              //         color: Colors.white,
+              //         width: 6.0,
+              //       ),
+              //     ),
+              //     child: ClipRRect(
+              //       borderRadius: BorderRadius.circular(80),
+              //     ),
+              //   ),
+              // ),
               _buildMainInfo(context, width)
             ],
           ),
@@ -165,14 +173,28 @@ class _ProfileState extends State<Profile> {
                         style: TextStyle(
                             fontSize: 15.0,
                             color: Colors.black,
-                            fontWeight: FontWeight.w400),
+                            fontWeight: FontWeight.bold),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
-                        child: Text(
-                          '${this.widget.user.timeIn}',
-                          style: TextStyle(
-                              fontSize: 15.0, color: Color(0xFF2979FF)),
+                        // child: Text(
+                        //   '${this.widget.user.timeIn}',
+                        //   style: TextStyle(
+                        //       fontSize: 15.0, color: Color(0xFF2979FF)),
+                        // ),
+
+                        child: FutureBuilder<User>(
+                          future: user,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Text(snapshot.data.timeIn);
+                            } else if (snapshot.hasError) {
+                              return Text("${snapshot.error}");
+                            }
+
+                            // By default, show a loading spinner.
+                            return CircularProgressIndicator();
+                          },
                         ),
                       ),
                     ],
@@ -181,14 +203,25 @@ class _ProfileState extends State<Profile> {
                     children: <Widget>[
                       Text(
                         'Jam Keluar',
-                        style: TextStyle(fontSize: 15.0, color: Colors.black),
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
-                        child: Text(
-                          '${this.widget.user.timeOut}',
-                          style: TextStyle(
-                              fontSize: 15.0, color: Color(0xFF2979FF)),
+                        child: FutureBuilder<User>(
+                          future: user,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Text(snapshot.data.timeOut);
+                            } else if (snapshot.hasError) {
+                              return Text("${snapshot.error}");
+                            }
+
+                            // By default, show a loading spinner.
+                            return CircularProgressIndicator();
+                          },
                         ),
                       ),
                     ],
@@ -208,22 +241,23 @@ class _ProfileState extends State<Profile> {
       margin: const EdgeInsets.all(10),
       alignment: AlignmentDirectional.center,
       child: Column(
-        children: <Widget>[
-          Text('${this.widget.user.name}',
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text('${this.widget.user.status} - ${this.widget.user.position}',
-              style: TextStyle(
-                  color: Colors.grey.shade50, fontStyle: FontStyle.italic))
-        ],
+        // children: <Widget>[
+        //   Text('${this.widget.user.name}',
+        //       style: TextStyle(
+        //           fontSize: 20,
+        //           color: Colors.white,
+        //           fontWeight: FontWeight.bold)),
+        //   SizedBox(height: 10),
+        //   Text('${this.widget.user.status} - ${this.widget.user.position}',
+        //       style: TextStyle(
+        //           color: Colors.grey.shade50, fontStyle: FontStyle.italic))
+        // ],
+        
       ),
     );
   }
 
-  Widget _buildInfo(BuildContext context, double width){
+  Widget _buildInfo(BuildContext context, double width) {
     return Container(
         padding: EdgeInsets.all(10),
         child: Card(
@@ -239,18 +273,21 @@ class _ProfileState extends State<Profile> {
                       leading: Icon(Icons.email, color: Color(0xFF2979FF)),
                       title: Text("Email",
                           style: TextStyle(fontSize: 18, color: Colors.black)),
-                      subtitle: Text("${this.widget.user.email}",
-                          style:
-                              TextStyle(fontSize: 15, color: Colors.black54)),
+                          
+                      // subtitle: Text("${this.widget.user.email}",
+                      //     style:
+                      //         TextStyle(fontSize: 15, color: Colors.black54)),
                     ),
                     Divider(),
                     ListTile(
                       leading: Icon(Icons.phone, color: Color(0xFF2979FF)),
                       title: Text("Telepon",
                           style: TextStyle(fontSize: 18, color: Colors.black)),
-                      subtitle: Text("${this.widget.user.phone}",
-                          style:
-                              TextStyle(fontSize: 15, color: Colors.black54)),
+                      // subtitle: Text("${this.widget.user.phone}",
+                      //     style:
+                      //         TextStyle(fontSize: 15, color: Colors.black54)),
+
+                      
                     ),
                     Divider(),
                     ListTile(
@@ -259,9 +296,9 @@ class _ProfileState extends State<Profile> {
                       leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                       title: Text("Alamat",
                           style: TextStyle(fontSize: 18, color: Colors.black)),
-                      subtitle: Text("${this.widget.user.address}",
-                          style:
-                              TextStyle(fontSize: 15, color: Colors.black54)),
+                      // subtitle: Text("${this.widget.user.address}",
+                      //     style:
+                      //         TextStyle(fontSize: 15, color: Colors.black54)),
                     ),
                   ],
                 )

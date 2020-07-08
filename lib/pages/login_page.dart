@@ -58,9 +58,9 @@ class _LoginPageState extends State<LoginPage> {
         String timeIn = 'Belum Absen';
         String timeOut = 'Belum Absen';
         
-        if(jsonResponse['employee']['attendance'].length != 0){
-          timeIn = jsonResponse['employee']['attendance'][0]['time_in'];
-          timeOut = jsonResponse['employee']['attendance'][0]['time_out'].toString() != null ? jsonResponse['employee']['attendance'][0]['time_out'] : "Belum Absen";
+        if(jsonResponse['employee']['attendance'] != null){
+          timeIn = jsonResponse['employee']['attendance']['time_in'];
+          timeOut = jsonResponse['employee']['attendance']['time_out'].toString() != null ? jsonResponse['employee']['attendance']['time_out'] : "Belum Absen";
         }
 
         User user = new User(
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
       'password': password,
       'client_id': '2',
       'grant_type': 'password',
-      'client_secret': 'SW9uL4QFXM81iHO85ioiIVazyGfLopXpWqmQK47M'
+      'client_secret': 'CnMt4uRImKp2FOrklEvS38I5xBMRT1CQXNxco6Me'
     };
 
     var jsonResponse = null;
@@ -131,9 +131,9 @@ class _LoginPageState extends State<LoginPage> {
       String timeIn = 'Belum Absen';
       String timeOut = 'Belum Absen';
       
-        if(responseJson2['employee']['attendance'].length != 0){
-          timeIn = responseJson2['employee']['attendance'][0]['time_in'];
-          timeOut = responseJson2['employee']['attendance'][0]['time_out'] ? responseJson2['employee']['attendance'][0]['time_out'].toString() : "Belum Absen";
+        if(responseJson2['employee']['attendance'] != null){
+          timeIn = responseJson2['employee']['attendance']['time_in'];
+          timeOut = responseJson2['employee']['attendance']['time_out'] ? responseJson2['employee']['attendance']['time_out'] : "Belum Absen";
         }
 
       User user = new User(

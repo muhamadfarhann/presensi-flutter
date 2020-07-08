@@ -42,6 +42,8 @@ class _DashboardState extends State<Dashboard> {
   String deviceId = "";
   // End Device ID
 
+  AppConfig config = new AppConfig();
+
   @override
   void initState() {
     _pref();
@@ -206,7 +208,8 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: AssetImage("images/farhan.jpg"),
+                    // backgroundImage: AssetImage("images/farhan.jpg"),
+                    backgroundImage: NetworkImage("${config.apiURL}/images/${this.widget.user.photo}")
                   ),
                   SizedBox(
                     width: 10.0,

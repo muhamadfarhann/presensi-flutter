@@ -146,9 +146,10 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       setState(() {
                         currentScreen = Profile(
-                            user: this
-                                .widget
-                                .user); // if user taps on this dashboard tab will be active
+                            // user: this
+                            //     .widget
+                            //     .user
+                                ); // if user taps on this dashboard tab will be active
                         currentTab = 3;
                       });
                     },
