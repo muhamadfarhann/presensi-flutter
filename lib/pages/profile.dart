@@ -109,17 +109,31 @@ class _ProfileState extends State<Profile> {
         Container(
           width: double.infinity,
           margin: const EdgeInsets.only(top: 50),
-          child: Column(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 55,
-                backgroundColor: Colors.white,
-                child: CircleAvatar(
-                  radius: 54,
-                  // backgroundImage: NetworkImage("${config.apiURL}/images/${this.widget.user.photo}")
-                ),
-              ),
-
+          child: FutureBuilder<User>(
+            future: user,
+             builder: (context, snapshot) {
+                List<Widget> children;
+                if (snapshot.hasData) {
+                  children = <Widget>[
+                      CircleAvatar(
+                          radius: 55,
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius: 54,
+                            backgroundImage: NetworkImage("${config.apiURL}/images/${snapshot.data.photo}")
+                          ),
+                        ),
+                        _buildMainInfo(context, width)
+                  ];
+                  return Center(child: Column(
+                    children: children, 
+                    
+                  ));
+                }
+                return CircularProgressIndicator();
+             }
+            // children: <Widget>[
+              
               // Card(
               //   elevation: 2,
               //   shape: RoundedRectangleBorder(
@@ -141,8 +155,8 @@ class _ProfileState extends State<Profile> {
               //     ),
               //   ),
               // ),
-              _buildMainInfo(context, width)
-            ],
+             
+            // ],
           ),
         ),
         Container(
@@ -240,71 +254,76 @@ class _ProfileState extends State<Profile> {
       width: width,
       margin: const EdgeInsets.all(10),
       alignment: AlignmentDirectional.center,
-      child: Column(
-        // children: <Widget>[
-        //   Text('${this.widget.user.name}',
-        //       style: TextStyle(
-        //           fontSize: 20,
-        //           color: Colors.white,
-        //           fontWeight: FontWeight.bold)),
-        //   SizedBox(height: 10),
-        //   Text('${this.widget.user.status} - ${this.widget.user.position}',
-        //       style: TextStyle(
-        //           color: Colors.grey.shade50, fontStyle: FontStyle.italic))
-        // ],
-        
+      child: FutureBuilder<User>(
+        future: user,
+        builder: (context, snapshot) {
+           List<Widget> children;
+              if (snapshot.hasData) {
+                children = <Widget>[
+                  Text(snapshot.data.name,
+                    style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold)),
+                    SizedBox(height: 10),
+                    Text('${snapshot.data.status} - ${snapshot.data.position}',
+                        style: TextStyle(
+                        color: Colors.grey.shade50, fontStyle: FontStyle.italic))
+                  ];
+                return Center(child: Column(children: children));
+              }
+            return CircularProgressIndicator();
+        }
       ),
     );
   }
 
   Widget _buildInfo(BuildContext context, double width) {
     return Container(
-        padding: EdgeInsets.all(10),
-        child: Card(
-          color: Colors.white,
-          child: Container(
-            alignment: Alignment.topLeft,
-            padding: EdgeInsets.all(15),
-            child: Column(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    ListTile(
-                      leading: Icon(Icons.email, color: Color(0xFF2979FF)),
-                      title: Text("Email",
-                          style: TextStyle(fontSize: 18, color: Colors.black)),
-                          
-                      // subtitle: Text("${this.widget.user.email}",
-                      //     style:
-                      //         TextStyle(fontSize: 15, color: Colors.black54)),
-                    ),
-                    Divider(),
-                    ListTile(
-                      leading: Icon(Icons.phone, color: Color(0xFF2979FF)),
-                      title: Text("Telepon",
-                          style: TextStyle(fontSize: 18, color: Colors.black)),
-                      // subtitle: Text("${this.widget.user.phone}",
-                      //     style:
-                      //         TextStyle(fontSize: 15, color: Colors.black54)),
-
-                      
-                    ),
-                    Divider(),
-                    ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      leading: Icon(Icons.home, color: Color(0xFF2979FF)),
-                      title: Text("Alamat",
-                          style: TextStyle(fontSize: 18, color: Colors.black)),
-                      // subtitle: Text("${this.widget.user.address}",
-                      //     style:
-                      //         TextStyle(fontSize: 15, color: Colors.black54)),
-                    ),
-                  ],
-                )
-              ],
-            ),
+      padding: EdgeInsets.all(10),
+      child: Card(
+        color: Colors.white,
+        child: Container(
+          alignment: Alignment.topLeft,
+          padding: EdgeInsets.all(15),
+          child: FutureBuilder<User>(
+            future: user,
+            builder: (context, snapshot) {
+              List<Widget> children;
+              if (snapshot.hasData) {
+                children = <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.email, color: Color(0xFF2979FF)),
+                    title: Text("Email",
+                        style: TextStyle(fontSize: 18, color: Colors.black)),
+                    subtitle: Text(snapshot.data.email,
+                        style: TextStyle(fontSize: 15, color: Colors.black54)),
+                  ),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.phone, color: Color(0xFF2979FF)),
+                    title: Text("Telepon",
+                        style: TextStyle(fontSize: 18, color: Colors.black)),
+                    subtitle: Text(snapshot.data.phone,
+                        style: TextStyle(fontSize: 15, color: Colors.black54)),
+                  ),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.home, color: Color(0xFF2979FF)),
+                    title: Text("Alamat",
+                        style: TextStyle(fontSize: 18, color: Colors.black)),
+                    subtitle: Text(snapshot.data.address,
+                        style: TextStyle(fontSize: 15, color: Colors.black54)),
+                  ),
+                ];
+                return Center(child: Column(children: children));
+              }
+              // By default, show a loading spinner.
+              return CircularProgressIndicator();
+            },
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

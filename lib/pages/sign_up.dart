@@ -267,8 +267,8 @@ class _SignUpPageState extends State<SignUpPage> {
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       print("Your Password Is : ${jsonResponse['message']}");
-      // showAlertDialog('Success', jsonResponse['message'], DialogType.SUCCES,
-      //     context, () {});
+      showAlertDialog('Success', jsonResponse['message'], DialogType.SUCCES,
+          context, () {});
     } else {
       jsonResponse = json.decode(response.body);
       showAlertDialog(

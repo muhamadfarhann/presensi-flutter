@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:presensi/configs/app_config.dart';
 import 'package:presensi/pages/dashboard.dart';
@@ -89,6 +90,21 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void showAlertDialog(String title, String message, DialogType dialogType,
+      BuildContext context, VoidCallback onOkPress) {
+    AwesomeDialog(
+            context: context,
+            animType: AnimType.TOPSLIDE,
+            dialogType: dialogType,
+            title: title,
+            headerAnimationLoop: false,
+            desc: message,
+            btnOkIcon: Icons.check_circle,
+            btnOkColor: Color(0xFF2979FF),
+            btnOkOnPress: onOkPress)
+        .show();
+  }
+
   // Sign in
   signIn(String email, password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -133,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
       
         if(responseJson2['employee']['attendance'] != null){
           timeIn = responseJson2['employee']['attendance']['time_in'];
-          timeOut = responseJson2['employee']['attendance']['time_out'] ? responseJson2['employee']['attendance']['time_out'] : "Belum Absen";
+          timeOut = responseJson2['employee']['attendance']['time_out'].toString() != null ? responseJson2['employee']['attendance']['time_out'] : "Belum Absen";
         }
 
       User user = new User(
@@ -154,9 +170,11 @@ class _LoginPageState extends State<LoginPage> {
               builder: (BuildContext context) => Home(user: user)),
           (Route<dynamic> route) => false);
     } else {
+      showAlertDialog(
+          'Failed', jsonResponse['message'], DialogType.ERROR, context, () {});
       setState(() {
         _isLoading = false;
-        _error = jsonResponse["message"];
+        // _error = jsonResponse["message"];
       });
       // print(response.body);
     }
@@ -469,7 +487,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: height * .20),
                   _title(),
                   SizedBox(height: height * .105),
-                  showAlert(),
+                  // showAlert(),
                   _emailPasswordWidget(),
                   SizedBox(height: 20),
                   _submitButton(),
