@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:presensi/configs/app_config.dart';
-import 'package:presensi/pages/dashboard.dart';
 import 'package:presensi/models/user.dart';
 import 'package:presensi/pages/home.dart';
 import 'package:presensi/pages/sign_up.dart';
@@ -114,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
       'password': password,
       'client_id': '2',
       'grant_type': 'password',
-      'client_secret': 'CnMt4uRImKp2FOrklEvS38I5xBMRT1CQXNxco6Me'
+      'client_secret': 'SW9uL4QFXM81iHO85ioiIVazyGfLopXpWqmQK47M'
     };
 
     var jsonResponse = null;
@@ -288,87 +287,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
-
-  // Widget _divider() {
-  //   return Container(
-  //     margin: EdgeInsets.symmetric(vertical: 10),
-  //     child: Row(
-  //       children: <Widget>[
-  //         SizedBox(
-  //           width: 20,
-  //         ),
-  //         Expanded(
-  //           child: Padding(
-  //             padding: EdgeInsets.symmetric(horizontal: 10),
-  //             child: Divider(
-  //               thickness: 1,
-  //             ),
-  //           ),
-  //         ),
-  //         Text('or'),
-  //         Expanded(
-  //           child: Padding(
-  //             padding: EdgeInsets.symmetric(horizontal: 10),
-  //             child: Divider(
-  //               thickness: 1,
-  //             ),
-  //           ),
-  //         ),
-  //         SizedBox(
-  //           width: 20,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _facebookButton() {
-  //   return Container(
-  //     height: 50,
-  //     margin: EdgeInsets.symmetric(vertical: 20),
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.all(Radius.circular(10)),
-  //     ),
-  //     child: Row(
-  //       children: <Widget>[
-  //         Expanded(
-  //           flex: 1,
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               color: Color(0xff1959a9),
-  //               borderRadius: BorderRadius.only(
-  //                   bottomLeft: Radius.circular(5),
-  //                   topLeft: Radius.circular(5)),
-  //             ),
-  //             alignment: Alignment.center,
-  //             child: Text('f',
-  //                 style: TextStyle(
-  //                     color: Colors.white,
-  //                     fontSize: 25,
-  //                     fontWeight: FontWeight.w400)),
-  //           ),
-  //         ),
-  //         Expanded(
-  //           flex: 5,
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               color: Color(0xff2872ba),
-  //               borderRadius: BorderRadius.only(
-  //                   bottomRight: Radius.circular(5),
-  //                   topRight: Radius.circular(5)),
-  //             ),
-  //             alignment: Alignment.center,
-  //             child: Text('Log in with Facebook',
-  //                 style: TextStyle(
-  //                     color: Colors.white,
-  //                     fontSize: 18,
-  //                     fontWeight: FontWeight.w400)),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _createAccountLabel() {
     return InkWell(
