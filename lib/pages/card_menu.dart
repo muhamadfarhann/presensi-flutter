@@ -24,12 +24,12 @@ class _CardMenuState extends State<CardMenu> {
           initialLastDate: (new DateTime.now()).add(new Duration(days: 7)),
           firstDate: new DateTime(2015),
           lastDate: new DateTime(2021));
+          
     if (picked != null && picked != periode){
-      print(picked);
+      print("Ini Tangggal Awal ${picked[0]}");
+      print("Ini Tangggal Akhir ${picked[1]}");
     }
-      // setState(() {
-      //   periode = picked;
-      // });
+    
   }
 
   Future<String> getData() async {

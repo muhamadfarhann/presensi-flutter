@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class Dashboard extends StatefulWidget {
-  
   final User user;
 
   const Dashboard({Key key, this.user}) : super(key: key);
@@ -26,23 +25,14 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
   SharedPreferences sharedPreferences;
-
-// Membuat Field PostResult dengan value null
   Attendance attendance = null;
-
   String result = "Test";
-
-  // Location
   String messageLocation = "";
-  // end location
-
-  // Device ID
   String deviceId = "";
-  // End Device ID
-
+  String typeValue;
   AppConfig config = new AppConfig();
+  List types = ["Izin", "Sakit", "Cuti"];
 
   @override
   void initState() {
@@ -118,16 +108,41 @@ class _DashboardState extends State<Dashboard> {
   }
 
   TextEditingController _textFieldController = TextEditingController();
-  
+
   _displayDialog(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text('Lapor Ketidakhadiran'),
-            content: TextField(
-              controller: _textFieldController,
-              decoration: InputDecoration(hintText: "Keterangan"),
+            content: Column(
+              children: <Widget>[
+                Container(
+                  child: Column(
+                    children: <Widget>[
+                      TextField(
+                        controller: _textFieldController,
+                        decoration: InputDecoration(hintText: "Keterangan"),
+                      ),
+                      DropdownButton(
+                        hint: Text("- Pilih Keterangan -"),
+                        value: typeValue,
+                        items: types.map((value) {
+                          return DropdownMenuItem(
+                            child: new Text(value),
+                            value: value,
+                          );
+                        }).toList(), 
+                        onChanged: (value) {
+                          setState(() {
+                            typeValue = value;
+                          });
+                        }
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             actions: <Widget>[
               FlatButton(
@@ -208,9 +223,9 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: <Widget>[
                   CircleAvatar(
-                    // backgroundImage: AssetImage("images/farhan.jpg"),
-                    backgroundImage: NetworkImage("${config.apiURL}/images/${this.widget.user.photo}")
-                  ),
+                      // backgroundImage: AssetImage("images/farhan.jpg"),
+                      backgroundImage: NetworkImage(
+                          "${config.apiURL}/images/${this.widget.user.photo}")),
                   SizedBox(
                     width: 10.0,
                   ),
@@ -291,54 +306,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  // void showSimpleCustomDialog(BuildContext context, String txt) async {
-  //   Dialog simpleDialog = await Dialog(
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(12.0),
-  //     ),
-  //     child: Container(
-  //       height: 300.0,
-  //       width: 300.0,
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: <Widget>[
-  //           Padding(
-  //             padding: EdgeInsets.all(15.0),
-  //             child: Text(
-  //               '${txt}',
-  //               style: TextStyle(color: Colors.blue),
-  //             ),
-  //           ),
-  //           Padding(
-  //             padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               crossAxisAlignment: CrossAxisAlignment.end,
-  //               children: <Widget>[
-  //                 RaisedButton(
-  //                   color: Colors.blue,
-  //                   onPressed: () {
-  //                     Navigator.of(context).pop();
-  //                   },
-  //                   child: Text(
-  //                     'Okay',
-  //                     style: TextStyle(fontSize: 18.0, color: Colors.white),
-  //                   ),
-  //                 ),
-  //                 SizedBox(
-  //                   width: 20,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  //   showDialog(
-  //       context: context, builder: (BuildContext context) => simpleDialog);
-  // }
-
   void showAlertDialog(String title, String message, DialogType dialogType,
       BuildContext context, VoidCallback onOkPress) {
     AwesomeDialog(
@@ -409,18 +376,10 @@ class _DashboardState extends State<Dashboard> {
           }
         }
       } else {
-        // showSimpleCustomDialog(context,
         var message =
             "Tidak Dapat Melakukan Kehadiran, Pastikan QR Code Sesuai";
         showAlertDialog('Failed', message, DialogType.ERROR, context, () {});
       }
-      // print(position);
-      //end of geolocator
-
-      // device id
-
-      // result = "Sukses";
-      // attendance = value;
       setState(() {
         // attendance = value;
       });
