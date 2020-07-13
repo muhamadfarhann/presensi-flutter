@@ -85,14 +85,8 @@ class _ProfileState extends State<Profile> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              //==========================================================================================
-              // build Top Section of Profile (include : Image & main info & card of info[photos ... ] )
-              //==========================================================================================
               _buildHeader(context, widthC),
               SizedBox(height: 10.0),
-              //==========================================================================================
-              //  build Bottom Section of Profile (include : email - phone number - about - location )
-              //==========================================================================================
               _buildInfo(context, widthC),
             ],
           ),
@@ -132,31 +126,6 @@ class _ProfileState extends State<Profile> {
                 }
                 return CircularProgressIndicator();
              }
-            // children: <Widget>[
-              
-              // Card(
-              //   elevation: 2,
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(100),
-              //   ),
-              //   color: Color(0xFF2979FF),
-              //   child: Container(
-              //     width: 100,
-              //     height: 100,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(100),
-              //       border: Border.all(
-              //         color: Colors.white,
-              //         width: 6.0,
-              //       ),
-              //     ),
-              //     child: ClipRRect(
-              //       borderRadius: BorderRadius.circular(80),
-              //     ),
-              //   ),
-              // ),
-             
-            // ],
           ),
         ),
         Container(
@@ -191,12 +160,6 @@ class _ProfileState extends State<Profile> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
-                        // child: Text(
-                        //   '${this.widget.user.timeIn}',
-                        //   style: TextStyle(
-                        //       fontSize: 15.0, color: Color(0xFF2979FF)),
-                        // ),
-
                         child: FutureBuilder<User>(
                           future: user,
                           builder: (context, snapshot) {
@@ -205,8 +168,6 @@ class _ProfileState extends State<Profile> {
                             } else if (snapshot.hasError) {
                               return Text("${snapshot.error}");
                             }
-
-                            // By default, show a loading spinner.
                             return CircularProgressIndicator();
                           },
                         ),
@@ -232,8 +193,6 @@ class _ProfileState extends State<Profile> {
                             } else if (snapshot.hasError) {
                               return Text("${snapshot.error}");
                             }
-
-                            // By default, show a loading spinner.
                             return CircularProgressIndicator();
                           },
                         ),
@@ -270,7 +229,10 @@ class _ProfileState extends State<Profile> {
                         style: TextStyle(
                         color: Colors.grey.shade50, fontStyle: FontStyle.italic))
                   ];
-                return Center(child: Column(children: children));
+                return Center(
+                  child: Column(
+                    children: children)
+                );
               }
             return CircularProgressIndicator();
         }

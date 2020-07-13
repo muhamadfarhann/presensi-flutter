@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:presensi/configs/app_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 class CardMenu extends StatefulWidget {
   @override
@@ -11,15 +12,30 @@ class CardMenu extends StatefulWidget {
 }
 
 class _CardMenuState extends State<CardMenu> {
-
   List attendance;
-  
+  DateTime periode = DateTime.now();
   AppConfig config = new AppConfig();
-  
+
+  // Method memilih tanggal
+  Future<Null> _selectDate(BuildContext context) async {
+    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+         context: context,
+          initialFirstDate: new DateTime.now(),
+          initialLastDate: (new DateTime.now()).add(new Duration(days: 7)),
+          firstDate: new DateTime(2015),
+          lastDate: new DateTime(2021));
+    if (picked != null && picked != periode){
+      print(picked);
+    }
+      // setState(() {
+      //   periode = picked;
+      // });
+  }
+
   Future<String> getData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String id = sharedPreferences.getInt("employee_id").toString();
-    print("ID ANda ${id}");
+    print("ID Anda ${id}");
     final String url = '${config.apiURL}/api/attendance/${id}';
     // MEMINTA DATA KE SERVER DENGAN KETENTUAN YANG DI ACCEPT ADALAH JSON
     // var res = await http
@@ -51,90 +67,126 @@ class _CardMenuState extends State<CardMenu> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-            appBar: AppBar(title: Text('Data Absensi')),
             body: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: attendance == null ? 0 : attendance.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                            height: 150,
-                            width: double.maxFinite,
-                            child: Card(
-                              elevation: 3,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    top: BorderSide(
-                                        width: 2.0, color: Colors.blue),
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(7),
-                                  child: Stack(children: <Widget>[
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Stack(
-                                        children: <Widget>[
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 10, top: 5),
-                                              child: Column(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              _top(),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: attendance == null ? 0 : attendance.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        height: 150,
+                        width: double.maxFinite,
+                        child: Card(
+                          elevation: 3,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                top: BorderSide(width: 2.0, color: Colors.blue),
+                              ),
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(7),
+                              child: Stack(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Padding(
+                                          padding:
+                                              EdgeInsets.only(left: 10, top: 5),
+                                          child: Column(
+                                            children: <Widget>[
+                                              Row(
                                                 children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      //icon kalender
-                                                      attendanceIcon(
-                                                          attendance[index]),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      //Hari dan Tanggal
-                                                      attendanceDate(
-                                                          attendance[index]
-                                                              ['date']),
-                                                      Spacer(),
-                                                      attendanceStatus(
-                                                          attendance[index]
-                                                              ['overdue']),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 20,
-                                                      )
-                                                    ],
+                                                  //icon kalender
+                                                  attendanceIcon(
+                                                      attendance[index]),
+                                                  SizedBox(
+                                                    height: 10,
                                                   ),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      attendanceTime(
-                                                          attendance[index]
-                                                              ['time_in'],
-                                                          attendance[index]
-                                                              ['time_out'])
-                                                    ],
+                                                  //Hari dan Tanggal
+                                                  attendanceDate(
+                                                      attendance[index]
+                                                          ['date']),
+                                                  Spacer(),
+                                                  attendanceStatus(
+                                                      attendance[index]
+                                                          ['overdue']),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
                                                   )
                                                 ],
-                                              ))
-                                        ],
-                                      ),
-                                    )
-                                  ]),
-                                ),
-                              ),
+                                              ),
+                                              Row(
+                                                children: <Widget>[
+                                                  attendanceTime(
+                                                      attendance[index]
+                                                          ['time_in'],
+                                                      attendance[index]
+                                                          ['time_out'])
+                                                ],
+                                              )
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                )
+                              ]),
                             ),
-                          );
-                        }),
-                  ),
-                ],
+                          ),
+                        ),
+                      );
+                    }),
               ),
-            )));
+            ],
+          ),
+        )));
+  }
+
+  _top() {
+    return Container(
+      padding: EdgeInsets.only(top: 30, bottom: 10),
+      decoration: BoxDecoration(
+        color: Color(0xFF2979FF),
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30.0),
+            bottomRight: Radius.circular(30.0)),
+      ),
+      child: Row(
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          Text(
+            'Riwayat Kehadiran',
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 130),
+            child: IconButton(
+              icon: Icon(Icons.date_range),
+              iconSize: 30,
+              color: Colors.white,
+              // onPressed: () => _selectDate(context),
+              onPressed: () => _selectDate(context)
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget attendanceIcon(data) {
