@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:presensi/configs/app_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class CardMenu extends StatefulWidget {
   @override
@@ -18,10 +18,10 @@ class _CardMenuState extends State<CardMenu> {
 
   // Method memilih tanggal
   Future<Null> _selectDate(BuildContext context) async {
-    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+    final List<DateTime> picked = await DateRangePicker.showDatePicker(
          context: context,
-          initialFirstDate: new DateTime.now(),
-          initialLastDate: (new DateTime.now()).add(new Duration(days: 7)),
+          initialFirstDate: (new DateTime.now()).add(new Duration(days: -7)),
+          initialLastDate: new DateTime.now(),
           firstDate: new DateTime(2015),
           lastDate: new DateTime(2021));
           

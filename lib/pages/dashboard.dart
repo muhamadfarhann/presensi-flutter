@@ -8,16 +8,18 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:presensi/configs/app_config.dart';
+import 'package:presensi/models/absent.dart';
 import 'package:presensi/models/attendance.dart';
 import 'package:presensi/models/user.dart';
 import 'package:presensi/pages/card_menu.dart';
 import 'package:presensi/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class Dashboard extends StatefulWidget {
-  final User user;
 
+  final User user;
   const Dashboard({Key key, this.user}) : super(key: key);
 
   @override
@@ -25,14 +27,20 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+
+  DateTime periode = DateTime.now();
   SharedPreferences sharedPreferences;
   Attendance attendance = null;
   String result = "Test";
   String messageLocation = "";
+  String firstDate;
+  String lastDate;
   String deviceId = "";
   String typeValue;
+  List<DateTime> datePicked;
   AppConfig config = new AppConfig();
   List types = ["Izin", "Sakit", "Cuti"];
+  TextEditingController noteController = TextEditingController();
 
   @override
   void initState() {
@@ -87,68 +95,68 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
           ),
-          // Padding(
-          //   padding: EdgeInsets.all(16.0),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Text(
-          //         "Latest",
-          //         style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          // cardItem(1),
-          // cardItem(2),
-          // cardItem(3),
-          // cardItem(4),
         ],
       ),
     );
   }
-
-  TextEditingController _textFieldController = TextEditingController();
 
   _displayDialog(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Lapor Ketidakhadiran'),
-            content: Column(
-              children: <Widget>[
-                Container(
-                  child: Column(
-                    children: <Widget>[
-                      TextField(
-                        controller: _textFieldController,
-                        decoration: InputDecoration(hintText: "Keterangan"),
-                      ),
-                      DropdownButton(
-                        hint: Text("- Pilih Keterangan -"),
-                        value: typeValue,
-                        items: types.map((value) {
-                          return DropdownMenuItem(
-                            child: new Text(value),
-                            value: value,
-                          );
-                        }).toList(), 
-                        onChanged: (value) {
-                          setState(() {
-                            typeValue = value;
-                          });
-                        }
-                      ),
-                    ],
+            title: Text(
+              'Lapor Ketidakhadiran',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Keterangan :"),
+                        DropdownButton(
+                          hint: Text("- Pilih Keterangan -"),
+                          value: typeValue,
+                          items: types.map((value) {
+                            return DropdownMenuItem(
+                              child: new Text(value),
+                              value: value,
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              typeValue = value;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        new Text("Lama Izin : ${datePicked}"),
+                        IconButton(
+                          icon: Icon(AntDesign.calendar),
+                          onPressed: () {
+                            _selectDate(context);
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        Text("Catatan :"),
+                        TextField(
+                          controller: noteController,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             actions: <Widget>[
               FlatButton(
                 child: Text('Submit'),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  absent(noteController.text);
                 },
               ),
               FlatButton(
@@ -160,6 +168,24 @@ class _DashboardState extends State<Dashboard> {
             ],
           );
         });
+  }
+
+  // Method memilih tanggal
+  Future<Null> _selectDate(BuildContext context) async {
+    final List<DateTime> picked = await DateRangePicker.showDatePicker(
+        context: context,
+        initialFirstDate: (new DateTime.now()).add(new Duration(days: -7)),
+        initialLastDate: new DateTime.now(),
+        firstDate: new DateTime(2015),
+        lastDate: new DateTime(2021)
+    );
+
+    if (picked != null && picked != periode) {
+           
+      setState(() {
+        datePicked = picked;
+      });
+    }
   }
 
   cardItem(image) {
@@ -321,6 +347,21 @@ class _DashboardState extends State<Dashboard> {
         .show();
   }
 
+  // Method untuk melakukan izin, cuti, dll
+  absent(String note) async {
+    Map data = {
+      "employee_id": sharedPreferences.getInt("employee_id").toString(),
+      "type": typeValue,
+      "firstDate" : firstDate,
+      "lastDate" : lastDate,
+      "note" : note,
+    };
+
+    print(data);
+
+  } 
+
+
   // Method untuk memulai scan qr
   Future<Attendance> _scanQR() async {
     try {
@@ -328,7 +369,6 @@ class _DashboardState extends State<Dashboard> {
       var newDt = DateFormat.Hms().format(now);
       var formatter = new DateFormat('yyyy-MM-dd');
       String myDate = formatter.format(now);
-
       String qrResult = await BarcodeScanner.scan();
       // print(qrResult);
       print("Hasil QR: ${qrResult}");
@@ -338,6 +378,7 @@ class _DashboardState extends State<Dashboard> {
       final androidDeviceId = androidDeviceInfo.androidId;
       print("Dev ID: ${androidDeviceId}");
       print("Hasil Flutter: ${myDate}");
+
       // Geolocator
       if (qrResult == myDate) {
         final position = await Geolocator()
