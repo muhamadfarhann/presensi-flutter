@@ -11,6 +11,7 @@ import 'package:presensi/configs/app_config.dart';
 import 'package:presensi/models/absent.dart';
 import 'package:presensi/models/attendance.dart';
 import 'package:presensi/models/user.dart';
+import 'package:presensi/pages/absent_form.dart';
 import 'package:presensi/pages/card_menu.dart';
 import 'package:presensi/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,6 @@ import 'package:http/http.dart' as http;
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class Dashboard extends StatefulWidget {
-
   final User user;
   const Dashboard({Key key, this.user}) : super(key: key);
 
@@ -27,7 +27,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
   DateTime periode = DateTime.now();
   SharedPreferences sharedPreferences;
   Attendance attendance = null;
@@ -56,118 +55,51 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          _top(),
-          SizedBox(
-            height: 20.0,
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "Category",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
-                ),
-              ],
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            _top(),
+            SizedBox(
+              height: 10.0,
             ),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Container(
-            height: 200.0,
-            child: GridView(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 30.0,
-                  crossAxisCount: 3,
-                  childAspectRatio: 3 / 2),
-              children: <Widget>[
-                gridItem(AntDesign.calendar, "Riwayat Absensi", 1),
-                gridItem(AntDesign.scan1, "Scan Absen", 2),
-                gridItem(AntDesign.solution1, "Lapor Absen", 3),
-                gridItem(Icons.bluetooth_searching, "C", 4),
-                gridItem(Icons.add_location, "D", 5),
-                gridItem(Icons.keyboard, "E", 6)
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _displayDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Lapor Ketidakhadiran',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            content: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text("Keterangan :"),
-                        DropdownButton(
-                          hint: Text("- Pilih Keterangan -"),
-                          value: typeValue,
-                          items: types.map((value) {
-                            return DropdownMenuItem(
-                              child: new Text(value),
-                              value: value,
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              typeValue = value;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        new Text("Lama Izin : ${datePicked}"),
-                        IconButton(
-                          icon: Icon(AntDesign.calendar),
-                          onPressed: () {
-                            _selectDate(context);
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        Text("Catatan :"),
-                        TextField(
-                          controller: noteController,
-                        ),
-                      ],
-                    ),
+                  Text(
+                    "Kategori",
+                    style:
+                        TextStyle(
+                          fontWeight: FontWeight.bold, 
+                          fontSize: 22.0,
+                          fontFamily: 'Nunito'),
                   ),
                 ],
               ),
             ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Submit'),
-                onPressed: () {
-                  absent(noteController.text);
-                },
+            Container(
+              height: 230.0,
+              child: GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    mainAxisSpacing: 30.0,
+                    crossAxisCount: 3,
+                    childAspectRatio: 3 / 2),
+                children: <Widget>[
+                  gridItem(AntDesign.calendar, "Riwayat Absensi", 1),
+                  gridItem(AntDesign.scan1, "Scan Absen", 2),
+                  gridItem(AntDesign.solution1, "Lapor Absen", 3),
+                  gridItem(Icons.bluetooth_searching, "C", 4),
+                  gridItem(Icons.add_location, "D", 5),
+                  gridItem(Icons.keyboard, "E", 6)
+                ],
               ),
-              FlatButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // Method memilih tanggal
@@ -177,11 +109,9 @@ class _DashboardState extends State<Dashboard> {
         initialFirstDate: (new DateTime.now()).add(new Duration(days: -7)),
         initialLastDate: new DateTime.now(),
         firstDate: new DateTime(2015),
-        lastDate: new DateTime(2021)
-    );
+        lastDate: new DateTime(2021));
 
     if (picked != null && picked != periode) {
-           
       setState(() {
         datePicked = picked;
       });
@@ -234,7 +164,7 @@ class _DashboardState extends State<Dashboard> {
 
   _top() {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.fromLTRB(15, 40, 15, 30),
       decoration: BoxDecoration(
         color: Color(0xFF2979FF),
         borderRadius: BorderRadius.only(
@@ -257,7 +187,10 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   Text(
                     "Hi, ${this.widget.user.name}\nYou are ${this.widget.user.position}",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Nunito'
+                    ),
                   ),
                 ],
               ),
@@ -276,7 +209,7 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
           SizedBox(
-            height: 30.0,
+            height: 20.0,
           ),
           TextField(
             decoration: InputDecoration(
@@ -309,7 +242,8 @@ class _DashboardState extends State<Dashboard> {
                 _scanQR().then((value) {});
                 break;
               case 3:
-                _displayDialog(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AbsentForm()));
                 break;
               default:
             }
@@ -327,7 +261,13 @@ class _DashboardState extends State<Dashboard> {
         SizedBox(
           height: 10.0,
         ),
-        Text(name),
+        Text(
+          name,
+          style: TextStyle(
+            fontFamily: 'Nunito',
+            fontSize: 13
+          ),
+        ),
       ],
     );
   }
@@ -346,21 +286,6 @@ class _DashboardState extends State<Dashboard> {
             btnOkOnPress: onOkPress)
         .show();
   }
-
-  // Method untuk melakukan izin, cuti, dll
-  absent(String note) async {
-    Map data = {
-      "employee_id": sharedPreferences.getInt("employee_id").toString(),
-      "type": typeValue,
-      "firstDate" : firstDate,
-      "lastDate" : lastDate,
-      "note" : note,
-    };
-
-    print(data);
-
-  } 
-
 
   // Method untuk memulai scan qr
   Future<Attendance> _scanQR() async {

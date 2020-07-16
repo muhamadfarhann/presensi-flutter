@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:presensi/pages/chat.dart';
 
 class Home extends StatefulWidget {
-  final User user;
 
+  final User user;
   const Home({Key key, this.user}) : super(key: key);
 
   @override
@@ -17,18 +17,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  
   int currentTab = 0;
-
+  final PageStorageBucket bucket = PageStorageBucket();
+  Widget currentScreen;
   final List<Widget> screens = [
     Dashboard(),
     // Chat(),
     Profile(),
     // Settings(),
   ];
-
-  final PageStorageBucket bucket = PageStorageBucket();
-
-  Widget currentScreen;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +77,7 @@ class _HomeState extends State<Home> {
                           'Dashboard',
                           style: TextStyle(
                             color: currentTab == 0 ? Colors.blue : Colors.grey,
+                            fontFamily: 'Nunito',
                           ),
                         ),
                       ],
@@ -164,6 +164,7 @@ class _HomeState extends State<Home> {
                           'Profil',
                           style: TextStyle(
                             color: currentTab == 3 ? Colors.blue : Colors.grey,
+                            fontFamily: 'Nunito',
                           ),
                         ),
                       ],

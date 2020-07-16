@@ -154,7 +154,7 @@ class _CardMenuState extends State<CardMenu> {
 
   _top() {
     return Container(
-      padding: EdgeInsets.only(top: 30, bottom: 10),
+      padding: EdgeInsets.only(top: 35, bottom: 10),
       decoration: BoxDecoration(
         color: Color(0xFF2979FF),
         borderRadius: BorderRadius.only(
@@ -170,12 +170,20 @@ class _CardMenuState extends State<CardMenu> {
               Navigator.pop(context);
             },
           ),
-          Text(
-            'Riwayat Kehadiran',
-            style: TextStyle(color: Colors.white, fontSize: 15),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 60),
+            child: Text(
+              'Riwayat Kehadiran',
+              style: TextStyle(
+                color: Colors.white, 
+                fontSize: 16,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.bold
+              ),
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 130),
+            padding: const EdgeInsets.only(left: 10),
             child: IconButton(
               icon: Icon(Icons.date_range),
               iconSize: 30,
