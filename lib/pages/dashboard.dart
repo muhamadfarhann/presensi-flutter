@@ -8,17 +8,18 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:presensi/configs/app_config.dart';
+import 'package:presensi/models/absent.dart';
 import 'package:presensi/models/attendance.dart';
 import 'package:presensi/models/user.dart';
+import 'package:presensi/pages/absent_form.dart';
 import 'package:presensi/pages/card_menu.dart';
 import 'package:presensi/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class Dashboard extends StatefulWidget {
-  
   final User user;
-
   const Dashboard({Key key, this.user}) : super(key: key);
 
   @override
@@ -26,23 +27,19 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
+  DateTime periode = DateTime.now();
   SharedPreferences sharedPreferences;
-
-// Membuat Field PostResult dengan value null
   Attendance attendance = null;
-
   String result = "Test";
-
-  // Location
   String messageLocation = "";
-  // end location
-
-  // Device ID
+  String firstDate;
+  String lastDate;
   String deviceId = "";
-  // End Device ID
-
+  String typeValue;
+  List<DateTime> datePicked;
   AppConfig config = new AppConfig();
+  List types = ["Izin", "Sakit", "Cuti"];
+  TextEditingController noteController = TextEditingController();
 
   @override
   void initState() {
@@ -58,93 +55,67 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          _top(),
-          SizedBox(
-            height: 20.0,
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "Category",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
-                ),
-              ],
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            _top(),
+            SizedBox(
+              height: 10.0,
             ),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Container(
-            height: 200.0,
-            child: GridView(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 30.0,
-                  crossAxisCount: 3,
-                  childAspectRatio: 3 / 2),
-              children: <Widget>[
-                gridItem(AntDesign.calendar, "Riwayat Absensi", 1),
-                gridItem(AntDesign.scan1, "Scan Absen", 2),
-                gridItem(AntDesign.solution1, "Lapor Absen", 3),
-                gridItem(Icons.bluetooth_searching, "C", 4),
-                gridItem(Icons.add_location, "D", 5),
-                gridItem(Icons.keyboard, "E", 6)
-              ],
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Kategori",
+                    style:
+                        TextStyle(
+                          fontWeight: FontWeight.bold, 
+                          fontSize: 22.0,
+                          fontFamily: 'Nunito'),
+                  ),
+                ],
+              ),
             ),
-          ),
-          // Padding(
-          //   padding: EdgeInsets.all(16.0),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Text(
-          //         "Latest",
-          //         style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          // cardItem(1),
-          // cardItem(2),
-          // cardItem(3),
-          // cardItem(4),
-        ],
+            Container(
+              height: 230.0,
+              child: GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    mainAxisSpacing: 30.0,
+                    crossAxisCount: 3,
+                    childAspectRatio: 3 / 2),
+                children: <Widget>[
+                  gridItem(AntDesign.calendar, "Riwayat Absensi", 1),
+                  gridItem(AntDesign.scan1, "Scan Absen", 2),
+                  gridItem(AntDesign.solution1, "Lapor Absen", 3),
+                  gridItem(Icons.bluetooth_searching, "C", 4),
+                  gridItem(Icons.add_location, "D", 5),
+                  gridItem(Icons.keyboard, "E", 6)
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  TextEditingController _textFieldController = TextEditingController();
-  
-  _displayDialog(BuildContext context) async {
-    return showDialog(
+  // Method memilih tanggal
+  Future<Null> _selectDate(BuildContext context) async {
+    final List<DateTime> picked = await DateRangePicker.showDatePicker(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Lapor Ketidakhadiran'),
-            content: TextField(
-              controller: _textFieldController,
-              decoration: InputDecoration(hintText: "Keterangan"),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Submit'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
+        initialFirstDate: (new DateTime.now()).add(new Duration(days: -7)),
+        initialLastDate: new DateTime.now(),
+        firstDate: new DateTime(2015),
+        lastDate: new DateTime(2021));
+
+    if (picked != null && picked != periode) {
+      setState(() {
+        datePicked = picked;
+      });
+    }
   }
 
   cardItem(image) {
@@ -193,7 +164,7 @@ class _DashboardState extends State<Dashboard> {
 
   _top() {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.fromLTRB(15, 40, 15, 30),
       decoration: BoxDecoration(
         color: Color(0xFF2979FF),
         borderRadius: BorderRadius.only(
@@ -208,15 +179,18 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: <Widget>[
                   CircleAvatar(
-                    // backgroundImage: AssetImage("images/farhan.jpg"),
-                    backgroundImage: NetworkImage("${config.apiURL}/images/${this.widget.user.photo}")
-                  ),
+                      // backgroundImage: AssetImage("images/farhan.jpg"),
+                      backgroundImage: NetworkImage(
+                          "${config.apiURL}/images/${this.widget.user.photo}")),
                   SizedBox(
                     width: 10.0,
                   ),
                   Text(
                     "Hi, ${this.widget.user.name}\nYou are ${this.widget.user.position}",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Nunito'
+                    ),
                   ),
                 ],
               ),
@@ -235,7 +209,7 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
           SizedBox(
-            height: 30.0,
+            height: 20.0,
           ),
           TextField(
             decoration: InputDecoration(
@@ -268,7 +242,8 @@ class _DashboardState extends State<Dashboard> {
                 _scanQR().then((value) {});
                 break;
               case 3:
-                _displayDialog(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AbsentForm()));
                 break;
               default:
             }
@@ -286,58 +261,16 @@ class _DashboardState extends State<Dashboard> {
         SizedBox(
           height: 10.0,
         ),
-        Text(name),
+        Text(
+          name,
+          style: TextStyle(
+            fontFamily: 'Nunito',
+            fontSize: 13
+          ),
+        ),
       ],
     );
   }
-
-  // void showSimpleCustomDialog(BuildContext context, String txt) async {
-  //   Dialog simpleDialog = await Dialog(
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(12.0),
-  //     ),
-  //     child: Container(
-  //       height: 300.0,
-  //       width: 300.0,
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: <Widget>[
-  //           Padding(
-  //             padding: EdgeInsets.all(15.0),
-  //             child: Text(
-  //               '${txt}',
-  //               style: TextStyle(color: Colors.blue),
-  //             ),
-  //           ),
-  //           Padding(
-  //             padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               crossAxisAlignment: CrossAxisAlignment.end,
-  //               children: <Widget>[
-  //                 RaisedButton(
-  //                   color: Colors.blue,
-  //                   onPressed: () {
-  //                     Navigator.of(context).pop();
-  //                   },
-  //                   child: Text(
-  //                     'Okay',
-  //                     style: TextStyle(fontSize: 18.0, color: Colors.white),
-  //                   ),
-  //                 ),
-  //                 SizedBox(
-  //                   width: 20,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  //   showDialog(
-  //       context: context, builder: (BuildContext context) => simpleDialog);
-  // }
 
   void showAlertDialog(String title, String message, DialogType dialogType,
       BuildContext context, VoidCallback onOkPress) {
@@ -361,7 +294,6 @@ class _DashboardState extends State<Dashboard> {
       var newDt = DateFormat.Hms().format(now);
       var formatter = new DateFormat('yyyy-MM-dd');
       String myDate = formatter.format(now);
-
       String qrResult = await BarcodeScanner.scan();
       // print(qrResult);
       print("Hasil QR: ${qrResult}");
@@ -371,6 +303,7 @@ class _DashboardState extends State<Dashboard> {
       final androidDeviceId = androidDeviceInfo.androidId;
       print("Dev ID: ${androidDeviceId}");
       print("Hasil Flutter: ${myDate}");
+
       // Geolocator
       if (qrResult == myDate) {
         final position = await Geolocator()
@@ -409,18 +342,10 @@ class _DashboardState extends State<Dashboard> {
           }
         }
       } else {
-        // showSimpleCustomDialog(context,
         var message =
             "Tidak Dapat Melakukan Kehadiran, Pastikan QR Code Sesuai";
         showAlertDialog('Failed', message, DialogType.ERROR, context, () {});
       }
-      // print(position);
-      //end of geolocator
-
-      // device id
-
-      // result = "Sukses";
-      // attendance = value;
       setState(() {
         // attendance = value;
       });

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:presensi/configs/app_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class CardMenu extends StatefulWidget {
   @override
@@ -18,18 +18,18 @@ class _CardMenuState extends State<CardMenu> {
 
   // Method memilih tanggal
   Future<Null> _selectDate(BuildContext context) async {
-    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+    final List<DateTime> picked = await DateRangePicker.showDatePicker(
          context: context,
-          initialFirstDate: new DateTime.now(),
-          initialLastDate: (new DateTime.now()).add(new Duration(days: 7)),
+          initialFirstDate: (new DateTime.now()).add(new Duration(days: -7)),
+          initialLastDate: new DateTime.now(),
           firstDate: new DateTime(2015),
           lastDate: new DateTime(2021));
+          
     if (picked != null && picked != periode){
-      print(picked);
+      print("Ini Tangggal Awal ${picked[0]}");
+      print("Ini Tangggal Akhir ${picked[1]}");
     }
-      // setState(() {
-      //   periode = picked;
-      // });
+    
   }
 
   Future<String> getData() async {
@@ -154,7 +154,7 @@ class _CardMenuState extends State<CardMenu> {
 
   _top() {
     return Container(
-      padding: EdgeInsets.only(top: 30, bottom: 10),
+      padding: EdgeInsets.only(top: 35, bottom: 10),
       decoration: BoxDecoration(
         color: Color(0xFF2979FF),
         borderRadius: BorderRadius.only(
@@ -170,12 +170,20 @@ class _CardMenuState extends State<CardMenu> {
               Navigator.pop(context);
             },
           ),
-          Text(
-            'Riwayat Kehadiran',
-            style: TextStyle(color: Colors.white, fontSize: 15),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 60),
+            child: Text(
+              'Riwayat Kehadiran',
+              style: TextStyle(
+                color: Colors.white, 
+                fontSize: 16,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.bold
+              ),
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 130),
+            padding: const EdgeInsets.only(left: 10),
             child: IconButton(
               icon: Icon(Icons.date_range),
               iconSize: 30,
