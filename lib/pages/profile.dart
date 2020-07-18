@@ -81,7 +81,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     double widthC = MediaQuery.of(context).size.width * 100;
     return Scaffold(
-        backgroundColor: Colors.grey.shade50,
+        backgroundColor: Colors.grey[200],
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[

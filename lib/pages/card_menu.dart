@@ -19,17 +19,16 @@ class _CardMenuState extends State<CardMenu> {
   // Method memilih tanggal
   Future<Null> _selectDate(BuildContext context) async {
     final List<DateTime> picked = await DateRangePicker.showDatePicker(
-         context: context,
-          initialFirstDate: (new DateTime.now()).add(new Duration(days: -7)),
-          initialLastDate: new DateTime.now(),
-          firstDate: new DateTime(2015),
-          lastDate: new DateTime(2021));
-          
-    if (picked != null && picked != periode){
+        context: context,
+        initialFirstDate: (new DateTime.now()).add(new Duration(days: -7)),
+        initialLastDate: new DateTime.now(),
+        firstDate: new DateTime(2015),
+        lastDate: new DateTime(2021));
+
+    if (picked != null && picked != periode) {
       print("Ini Tangggal Awal ${picked[0]}");
       print("Ini Tangggal Akhir ${picked[1]}");
     }
-    
   }
 
   Future<String> getData() async {
@@ -68,6 +67,7 @@ class _CardMenuState extends State<CardMenu> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
             body: Container(
+          color: Colors.grey[200],
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -175,22 +175,20 @@ class _CardMenuState extends State<CardMenu> {
             child: Text(
               'Riwayat Kehadiran',
               style: TextStyle(
-                color: Colors.white, 
-                fontSize: 16,
-                fontFamily: 'Nunito',
-                fontWeight: FontWeight.bold
-              ),
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: IconButton(
-              icon: Icon(Icons.date_range),
-              iconSize: 30,
-              color: Colors.white,
-              // onPressed: () => _selectDate(context),
-              onPressed: () => _selectDate(context)
-            ),
+                icon: Icon(Icons.date_range),
+                iconSize: 30,
+                color: Colors.white,
+                // onPressed: () => _selectDate(context),
+                onPressed: () => _selectDate(context)),
           ),
         ],
       ),

@@ -3,9 +3,11 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:presensi/configs/app_config.dart';
 import 'package:presensi/models/user.dart';
+import 'package:presensi/pages/dashboard.dart';
 import 'package:presensi/pages/home.dart';
 import 'package:presensi/pages/sign_up.dart';
 import 'package:presensi/src/widget/bezzier_container.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -23,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   String _error;
   bool _isLoading = false;
   AppConfig config = new AppConfig();
+  ProgressDialog progressDialog;
 
   @override
   void initState() {
@@ -62,22 +65,9 @@ class _LoginPageState extends State<LoginPage> {
           timeIn = jsonResponse['employee']['attendance']['time_in'];
           timeOut = jsonResponse['employee']['attendance']['time_out'].toString() != null ? jsonResponse['employee']['attendance']['time_out'] : "Belum Absen";
         }
-
-        User user = new User(
-          code: jsonResponse['employee']['employee_code'],
-          name: jsonResponse['employee']['name'],
-          position: jsonResponse['employee']['position'],
-          status: jsonResponse['employee']['status'],
-          email: jsonResponse['email'],
-          phone: jsonResponse['employee']['phone'],
-          address: jsonResponse['employee']['address'],
-          photo: jsonResponse['employee']['photo'],
-          timeIn: timeIn.toString(),
-          timeOut: timeOut.toString(),
-        );
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-                builder: (BuildContext context) => Home(user: user)),
+                builder: (BuildContext context) => Dashboard()),
             (Route<dynamic> route) => false);
       } else {
         setState(() {
@@ -113,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
       'password': password,
       'client_id': '2',
       'grant_type': 'password',
-      'client_secret': 'SW9uL4QFXM81iHO85ioiIVazyGfLopXpWqmQK47M'
+      'client_secret': 'CnMt4uRImKp2FOrklEvS38I5xBMRT1CQXNxco6Me'
     };
 
     var jsonResponse = null;
@@ -151,22 +141,9 @@ class _LoginPageState extends State<LoginPage> {
           timeOut = responseJson2['employee']['attendance']['time_out'].toString() != null ? responseJson2['employee']['attendance']['time_out'] : "Belum Absen";
         }
 
-      User user = new User(
-        code: responseJson2['employee']['employee_code'],
-        name: responseJson2['employee']['name'],
-        position: responseJson2['employee']['position'],
-        status: responseJson2['employee']['status'],
-        email: responseJson2['email'],
-        phone: responseJson2['employee']['phone'],
-        address: responseJson2['employee']['address'],
-        photo: responseJson2['employee']['photo'],
-        timeIn: timeIn.toString(),
-        timeOut: timeOut.toString(),
-      );
-
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (BuildContext context) => Home(user: user)),
+              builder: (BuildContext context) => Dashboard()),
           (Route<dynamic> route) => false);
     } else {
       showAlertDialog(
@@ -250,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _submitButton() {
+  Widget _submitButton(ProgressDialog) {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(vertical: 15),
@@ -262,7 +239,13 @@ class _LoginPageState extends State<LoginPage> {
                 setState(() {
                   _isLoading = true;
                 });
-                signIn(emailController.text, passwordController.text);
+                progressDialog.show();
+                Future.delayed(Duration(seconds: 2)).then((value) {
+                  // progressDialog.update(message: "Menyambungkan");
+                  signIn(emailController.text, passwordController.text);
+                  progressDialog.hide();
+                  
+                });
               },
         textColor: Colors.white,
         padding: EdgeInsets.all(0.0),
@@ -385,6 +368,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
+
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: Container(
@@ -408,7 +393,7 @@ class _LoginPageState extends State<LoginPage> {
                   // showAlert(),
                   _emailPasswordWidget(),
                   SizedBox(height: 20),
-                  _submitButton(),
+                  _submitButton(progressDialog),
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.centerRight,

@@ -60,7 +60,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                  builder: (BuildContext context) => Dashboard(user: user)),
+                  builder: (BuildContext context) => Dashboard()),
               (Route<dynamic> route) => false);
 
           // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(user: user)));

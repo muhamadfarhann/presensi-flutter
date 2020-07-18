@@ -6,9 +6,13 @@ import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:presensi/configs/app_config.dart';
+import 'package:presensi/models/user.dart';
 import 'package:presensi/pages/dashboard.dart';
+import 'package:presensi/pages/home.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:presensi/models/user.dart';
 
 class AbsentForm extends StatefulWidget {
   @override
@@ -24,6 +28,9 @@ class _AbsentFormState extends State<AbsentForm> {
   String typeValue;
   List types = ["Izin", "Sakit", "Cuti"];
   TextEditingController noteController = TextEditingController();
+
+  
+  ProgressDialog progressDialog;
 
   @override
   void initState() {
@@ -43,120 +50,12 @@ class _AbsentFormState extends State<AbsentForm> {
       home: Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Container(
+          color: Colors.grey[200],
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _top(),
-              Padding(
-                padding: EdgeInsets.only(left: 20, top: 15),
-                child: Text(
-                  "Lama Izin : ${firstDate} s/d ${lastDate}",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Nunito',
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 9),
-                child: IconButton(
-                  icon: Icon(AntDesign.calendar),
-                  onPressed: () {
-                    _selectDate(context);
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  "Keterangan :",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Nunito'),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: DropdownButton(
-                  hint: Text(
-                    "- Pilih Keterangan -",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Nunito',
-                    ),
-                  ),
-                  value: typeValue,
-                  items: types.map((value) {
-                    return DropdownMenuItem(
-                      child: new Text(value),
-                      value: value,
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      typeValue = value;
-                    });
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  "Catatan",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Nunito',
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: TextField(
-                  controller: noteController,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Nunito'
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: FlatButton(
-                  onPressed: () {
-                    absent(noteController.text);
-                  },
-                  textColor: Colors.white,
-                  padding: EdgeInsets.all(0.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Color(0xFF2979FF),
-                    ),
-                    //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Simpan',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ),
-              )
+              _body(),
             ],
           ),
         ),
@@ -208,6 +107,141 @@ class _AbsentFormState extends State<AbsentForm> {
     );
   }
 
+  _body() {
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
+    return Container(
+        padding: EdgeInsets.only(top: 35, bottom: 10),
+        margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0),
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
+            ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 0),
+            child: Text(
+              "Lama Izin : ${firstDate} s/d ${lastDate}",
+              style: TextStyle(
+                fontSize: 15,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 9),
+            child: IconButton(
+              icon: Icon(AntDesign.calendar),
+              onPressed: () {
+                _selectDate(context);
+              },
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              "Keterangan :",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Nunito'),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: DropdownButton(
+              hint: Text(
+                "- Pilih Keterangan -",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Nunito',
+                ),
+              ),
+              value: typeValue,
+              items: types.map((value) {
+                return DropdownMenuItem(
+                  child: new Text(value),
+                  value: value,
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  typeValue = value;
+                });
+              },
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              "Catatan",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Nunito',
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: TextField(
+              controller: noteController,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Nunito'),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: FlatButton(
+              onPressed: () {
+                progressDialog.show();
+                Future.delayed(Duration(seconds: 2)).then((value) {
+                  // progressDialog.update(message: "Menyambungkan");
+                  absent(noteController.text);
+                  progressDialog.hide();
+                  
+                });
+              },
+              textColor: Colors.white,
+              padding: EdgeInsets.all(0.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Color(0xFF2979FF),
+                ),
+                //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: Text(
+                  'Simpan',
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+            ),
+          )
+        ]));
+  }
+
   // Method memilih tanggal
   Future<Null> _selectDate(BuildContext context) async {
     final List<DateTime> picked = await DateRangePicker.showDatePicker(
@@ -243,10 +277,11 @@ class _AbsentFormState extends State<AbsentForm> {
         await http.post("${config.apiURL}/api/absent/store", body: data);
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-      showAlertDialog('Success', jsonResponse['message'], DialogType.SUCCES,
-          context, () {});
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Dashboard()));
+      showAlertDialog(
+          'Success', jsonResponse['message'], DialogType.SUCCES, context, () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Dashboard()));
+      });
     } else {
       jsonResponse = json.decode(response.body);
       showAlertDialog(
