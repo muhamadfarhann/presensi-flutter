@@ -60,14 +60,17 @@ class _LoginPageState extends State<LoginPage> {
 
         String timeIn = 'Belum Absen';
         String timeOut = 'Belum Absen';
-        
-        if(jsonResponse['employee']['attendance'] != null){
+
+        if (jsonResponse['employee']['attendance'] != null) {
           timeIn = jsonResponse['employee']['attendance']['time_in'];
-          timeOut = jsonResponse['employee']['attendance']['time_out'].toString() != null ? jsonResponse['employee']['attendance']['time_out'] : "Belum Absen";
+          timeOut =
+              jsonResponse['employee']['attendance']['time_out'].toString() !=
+                      null
+                  ? jsonResponse['employee']['attendance']['time_out']
+                  : "Belum Absen";
         }
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (BuildContext context) => Dashboard()),
+            MaterialPageRoute(builder: (BuildContext context) => Dashboard()),
             (Route<dynamic> route) => false);
       } else {
         setState(() {
@@ -135,15 +138,18 @@ class _LoginPageState extends State<LoginPage> {
 
       String timeIn = 'Belum Absen';
       String timeOut = 'Belum Absen';
-      
-        if(responseJson2['employee']['attendance'] != null){
-          timeIn = responseJson2['employee']['attendance']['time_in'];
-          timeOut = responseJson2['employee']['attendance']['time_out'].toString() != null ? responseJson2['employee']['attendance']['time_out'] : "Belum Absen";
-        }
+
+      if (responseJson2['employee']['attendance'] != null) {
+        timeIn = responseJson2['employee']['attendance']['time_in'];
+        timeOut =
+            responseJson2['employee']['attendance']['time_out'].toString() !=
+                    null
+                ? responseJson2['employee']['attendance']['time_out']
+                : "Belum Absen";
+      }
 
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (BuildContext context) => Dashboard()),
+          MaterialPageRoute(builder: (BuildContext context) => Dashboard()),
           (Route<dynamic> route) => false);
     } else {
       showAlertDialog(
@@ -171,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
             Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: 'Nunito'))
           ],
         ),
       ),
@@ -186,15 +192,20 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, 
+                          fontFamily: 'Nunito'),
           ),
           SizedBox(
             height: 10,
           ),
           TextField(
               controller: emailController,
+              style: TextStyle(
+                fontFamily: "Nunito"
+              ),
               decoration: InputDecoration(
                   border: InputBorder.none,
+                  hintText: "Input Email",
                   fillColor: Color(0xfff3f3f4),
                   filled: true))
         ],
@@ -210,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, fontFamily: 'Nunito'),
           ),
           SizedBox(
             height: 10,
@@ -220,6 +231,7 @@ class _LoginPageState extends State<LoginPage> {
               obscureText: isPassword,
               decoration: InputDecoration(
                   border: InputBorder.none,
+                  hintText: "Input Password",
                   fillColor: Color(0xfff3f3f4),
                   filled: true))
         ],
@@ -244,7 +256,6 @@ class _LoginPageState extends State<LoginPage> {
                   // progressDialog.update(message: "Menyambungkan");
                   signIn(emailController.text, passwordController.text);
                   progressDialog.hide();
-                  
                 });
               },
         textColor: Colors.white,
@@ -261,7 +272,7 @@ class _LoginPageState extends State<LoginPage> {
           alignment: Alignment.center,
           child: Text(
             'Login',
-            style: TextStyle(fontSize: 17),
+            style: TextStyle(fontSize: 17, fontFamily: 'Nunito'),
           ),
         ),
       ),
@@ -286,7 +297,7 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Text(
               'Belum Memiliki Akun ?',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Nunito'),
             ),
             SizedBox(
               width: 10,
@@ -294,8 +305,10 @@ class _LoginPageState extends State<LoginPage> {
             Text(
               'Register',
               style: TextStyle(
-                  color: Color(0xFF29B6FC),
+                  // color: Color(0xFF29B6FC),
+                  color: Colors.white,
                   fontSize: 13,
+                  fontFamily: 'Nunito',
                   fontWeight: FontWeight.w600),
             ),
           ],
@@ -310,9 +323,11 @@ class _LoginPageState extends State<LoginPage> {
       text: TextSpan(
         text: 'Login',
         style: TextStyle(
+          color: Colors.white,
+          fontFamily: 'Nunito',
           fontSize: 30,
           fontWeight: FontWeight.w700,
-          color: Color(0xFF29B6FC),
+          // color: Color(0xFF29B6FC),
         ),
       ),
     );
@@ -373,13 +388,18 @@ class _LoginPageState extends State<LoginPage> {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: Container(
+      decoration: BoxDecoration(
+        color: Color(0xFF2979FF),
+        // borderRadius: BorderRadius.only(
+        //   bottomLeft: Radius.circular(30.0),
+        //   bottomRight: Radius.circular(30.0),
+        //   topLeft: Radius.circular(30.0),
+        //   topRight: Radius.circular(30.0),
+        // ),
+      ),
       height: height,
       child: Stack(
         children: <Widget>[
-          Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer()),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
@@ -391,15 +411,35 @@ class _LoginPageState extends State<LoginPage> {
                   _title(),
                   SizedBox(height: height * .105),
                   // showAlert(),
-                  _emailPasswordWidget(),
-                  SizedBox(height: 20),
-                  _submitButton(progressDialog),
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30.0),
+                        bottomRight: Radius.circular(30.0),
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                      ),
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        _emailPasswordWidget(),
+                        SizedBox(height: 20),
+                        _submitButton(progressDialog),
+                      ],
+                    ),
+                  ),
+
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.centerRight,
                     child: Text('Forgot Password ?',
                         style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
+                            color: Colors.white,
+                            fontFamily: 'Nunito',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500)),
                   ),
                   // _divider(),
                   // _facebookButton(),

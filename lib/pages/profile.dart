@@ -90,43 +90,55 @@ class _ProfileState extends State<Profile> {
               _buildInfo(context, widthC),
             ],
           ),
-        ));
+        ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.edit),
+            onPressed: () => {},
+            foregroundColor: Colors.white,
+            backgroundColor: Color(0xFF2979FF),
+          ),
+      );
   }
 
   Widget _buildHeader(BuildContext context, double width) {
     return Stack(
       children: <Widget>[
         Ink(
-          height: 250,
-          color: Color(0xFF2979FF),
+          height: 265,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0)
+            ),
+            color: Color(0xFF2979FF),
+          ),
         ),
         Container(
           width: double.infinity,
           margin: const EdgeInsets.only(top: 50),
           child: FutureBuilder<User>(
-            future: user,
-             builder: (context, snapshot) {
+              future: user,
+              builder: (context, snapshot) {
                 List<Widget> children;
                 if (snapshot.hasData) {
                   children = <Widget>[
-                      CircleAvatar(
-                          radius: 55,
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            radius: 54,
-                            backgroundImage: NetworkImage("${config.apiURL}/images/${snapshot.data.photo}")
-                          ),
-                        ),
-                        _buildMainInfo(context, width)
+                    CircleAvatar(
+                      radius: 55,
+                      backgroundColor: Colors.white,
+                      child: CircleAvatar(
+                          radius: 54,
+                          backgroundImage: NetworkImage(
+                              "${config.apiURL}/images/${snapshot.data.photo}")),
+                    ),
+                    _buildMainInfo(context, width)
                   ];
-                  return Center(child: Column(
-                    children: children, 
-                    
+                  return Center(
+                      child: Column(
+                    children: children,
                   ));
                 }
                 return CircularProgressIndicator();
-             }
-          ),
+              }),
         ),
         Container(
             margin: const EdgeInsets.only(top: 210),
@@ -139,8 +151,10 @@ class _ProfileState extends State<Profile> {
     return Column(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+          padding: EdgeInsets.only(top: 15, left: 10, right: 10),
           child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             elevation: 5.0,
             color: Colors.white,
             child: Padding(
@@ -214,29 +228,26 @@ class _ProfileState extends State<Profile> {
       margin: const EdgeInsets.all(10),
       alignment: AlignmentDirectional.center,
       child: FutureBuilder<User>(
-        future: user,
-        builder: (context, snapshot) {
-           List<Widget> children;
-              if (snapshot.hasData) {
-                children = <Widget>[
-                  Text(snapshot.data.name,
+          future: user,
+          builder: (context, snapshot) {
+            List<Widget> children;
+            if (snapshot.hasData) {
+              children = <Widget>[
+                Text(snapshot.data.name,
                     style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10),
-                    Text('${snapshot.data.status} - ${snapshot.data.position}',
-                        style: TextStyle(
-                        color: Colors.grey.shade50, fontStyle: FontStyle.italic))
-                  ];
-                return Center(
-                  child: Column(
-                    children: children)
-                );
-              }
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                Text('${snapshot.data.status} - ${snapshot.data.position}',
+                    style: TextStyle(
+                        color: Colors.grey.shade50,
+                        fontStyle: FontStyle.italic))
+              ];
+              return Center(child: Column(children: children));
+            }
             return CircularProgressIndicator();
-        }
-      ),
+          }),
     );
   }
 
@@ -244,6 +255,7 @@ class _ProfileState extends State<Profile> {
     return Container(
       padding: EdgeInsets.all(10),
       child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         color: Colors.white,
         child: Container(
           alignment: Alignment.topLeft,

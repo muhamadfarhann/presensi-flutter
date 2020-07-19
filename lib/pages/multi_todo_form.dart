@@ -9,7 +9,6 @@ class MultiTodoForm extends StatefulWidget {
   _MultiTodoFormState createState() => _MultiTodoFormState();
 }
 
-
 class _MultiTodoFormState extends State<MultiTodoForm> {
   List<TodoForm> todos = [];
 
@@ -19,10 +18,28 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
     return Scaffold(
       appBar: AppBar(
         elevation: .0,
-        leading: Icon(
-          Icons.wb_cloudy,
+        backgroundColor: Color(0xFF2979FF),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+          ),
         ),
-        title: Text('Pengisian Todo Harian'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Padding(
+          padding: EdgeInsets.only(left: 35),
+          child: Text(
+            'Pengisian Todo Harian',
+            style: TextStyle(
+              fontFamily: 'Nunito',
+            ),
+          ),
+        ),
         actions: <Widget>[
           FlatButton(
             child: Text('Save'),
@@ -33,34 +50,35 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF30C1FF),
-              Color(0xFF2AA7DC),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: 
-        // TimeOfDayFormat.a_space_h_colon_mm.length <= 0
-        //     ? Center(
-        //         child: EmptyState(
-        //           title: 'Oops',
-        //           message: 'Add form by tapping add button below',
-        //         ),
-        //       )
-            // : 
+            // gradient: LinearGradient(
+            //   colors: [
+            //     Color(0xFF30C1FF),
+            //     Color(0xFF2AA7DC),
+            //   ],
+            //   begin: Alignment.topCenter,
+            //   end: Alignment.bottomCenter,
+            // ),
+            color: Colors.grey[200]),
+        child:
+            // TimeOfDayFormat.a_space_h_colon_mm.length <= 0
+            //     ? Center(
+            //         child: EmptyState(
+            //           title: 'Oops',
+            //           message: 'Add form by tapping add button below',
+            //         ),
+            //       )
+            // :
             ListView.builder(
-                addAutomaticKeepAlives: true,
-                itemCount: todos.length,
-                itemBuilder: (_, i) => todos[i],
-              ),
+          addAutomaticKeepAlives: true,
+          itemCount: todos.length,
+          itemBuilder: (_, i) => todos[i],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: onAddForm,
         foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF2979FF),
       ),
     );
   }
@@ -99,19 +117,19 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
           MaterialPageRoute(
             fullscreenDialog: true,
             builder: (_) => Scaffold(
-                  appBar: AppBar(
-                    title: Text('List of Users'),
+              appBar: AppBar(
+                title: Text('List of Todos'),
+              ),
+              body: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (_, i) => ListTile(
+                  leading: CircleAvatar(
+                    child: Text(data[i].task.substring(0, 1)),
                   ),
-                  body: ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (_, i) => ListTile(
-                          leading: CircleAvatar(
-                            child: Text(data[i].task.substring(0, 1)),
-                          ),
-                          title: Text(data[i].task),
-                        ),
-                  ),
+                  title: Text(data[i].task),
                 ),
+              ),
+            ),
           ),
         );
       }

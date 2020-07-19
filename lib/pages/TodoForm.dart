@@ -35,8 +35,14 @@ class _TodoFormState extends State<TodoForm> {
               AppBar(
                 leading: Icon(Icons.verified_user),
                 elevation: 0,
-                title: Text('Todo Detail'),
-                backgroundColor: Theme.of(context).accentColor,
+                title: Text(
+                  'Todo Detail',
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 16
+                  ),
+                ),
+                backgroundColor: Color(0xFF2979FF),
                 centerTitle: true,
                 actions: <Widget>[
                   IconButton(
@@ -46,12 +52,12 @@ class _TodoFormState extends State<TodoForm> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 16, right: 16, top: 16),
+                padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
                 child: TextFormField(
                   initialValue: widget.todo.task,
                   onSaved: (val) => widget.todo.task = val,
                   validator: (val) =>
-                      val.length > 3 ? null : 'Full name is invalid',
+                      val.length > 3 ? null : 'Todo is invalid',
                   decoration: InputDecoration(
                     labelText: 'Task',
                     hintText: 'Input Task',

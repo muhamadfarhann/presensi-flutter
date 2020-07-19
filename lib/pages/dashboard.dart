@@ -120,6 +120,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.grey[200],
       body: PageStorage(
         child: currentScreen == null ? _body() : currentScreen,
@@ -129,7 +130,7 @@ class _DashboardState extends State<Dashboard> {
         child: Icon(AntDesign.scan1),
         backgroundColor: Color(0xFF2979FF),
         onPressed: () {
-           _scanQR().then((value) {});
+          _scanQR().then((value) {});
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -148,7 +149,7 @@ class _DashboardState extends State<Dashboard> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = _body(); 
+                        currentScreen = _body();
                         currentTab = 0;
                       });
                     },
@@ -238,19 +239,20 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           Container(
-            height: 230.0,
+            height: 320.0,
             child: GridView(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   mainAxisSpacing: 30.0,
                   crossAxisCount: 3,
                   childAspectRatio: 3 / 2),
               children: <Widget>[
-                gridItem(AntDesign.calendar, "Riwayat Absensi", 1),
-                gridItem(AntDesign.filetext1, "TODO", 2),
-                gridItem(AntDesign.solution1, "Lapor Absen", 3),
-                gridItem(Icons.bluetooth_searching, "C", 4),
-                gridItem(Icons.add_location, "D", 5),
-                gridItem(Icons.keyboard, "E", 6)
+                gridItem(AntDesign.filetext1, "TODO", 1),
+                gridItem(AntDesign.solution1, "Lapor Absensi", 2),
+                gridItem(Icons.laptop, "Riwayat TODO", 3),
+                gridItem(AntDesign.calendar, "Riwayat Presensi", 4),
+                gridItem(AntDesign.poweroff, "Riwayat Absensi", 5),
+                gridItem(AntDesign.linechart, "Rekap Kehadiran", 6),
+                gridItem(AntDesign.carryout, "Tutup Buku", 7),
               ],
             ),
           ),
@@ -401,16 +403,18 @@ class _DashboardState extends State<Dashboard> {
           onTap: () {
             switch (number) {
               case 1:
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CardMenu()));
-                break;
-              case 2:
                Navigator.push(context,
                     MaterialPageRoute(builder: (context) => MultiTodoForm()));
                 break;
-              case 3:
-                Navigator.push(context,
+                
+              case 2:
+               Navigator.push(context,
                     MaterialPageRoute(builder: (context) => AbsentForm()));
+                break;
+
+              case 4:
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CardMenu()));
                 break;
               default:
             }
@@ -418,10 +422,10 @@ class _DashboardState extends State<Dashboard> {
           child: CircleAvatar(
             child: Icon(
               icon,
-              size: 26.0,
+              size: 23.0,
               color: Color(0xFF2979FF),
             ),
-            radius: 26.0,
+            radius: 24.0,
             backgroundColor: Colors.white,
           ),
         ),

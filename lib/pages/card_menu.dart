@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:presensi/configs/app_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
@@ -66,90 +67,95 @@ class _CardMenuState extends State<CardMenu> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-            body: Container(
-          color: Colors.grey[200],
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              _top(),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: attendance == null ? 0 : attendance.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        height: 150,
-                        width: double.maxFinite,
-                        child: Card(
-                          elevation: 3,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                top: BorderSide(width: 2.0, color: Colors.blue),
-                              ),
-                              color: Colors.white,
+          body: Container(
+            color: Colors.grey[200],
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                _top(),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: attendance == null ? 0 : attendance.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                          height: 150,
+                          width: double.maxFinite,
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.all(7),
-                              child: Stack(children: <Widget>[
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Padding(
-                                          padding:
-                                              EdgeInsets.only(left: 10, top: 5),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Row(
-                                                children: <Widget>[
-                                                  //icon kalender
-                                                  attendanceIcon(
-                                                      attendance[index]),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  //Hari dan Tanggal
-                                                  attendanceDate(
-                                                      attendance[index]
-                                                          ['date']),
-                                                  Spacer(),
-                                                  attendanceStatus(
-                                                      attendance[index]
-                                                          ['overdue']),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 20,
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: <Widget>[
-                                                  attendanceTime(
-                                                      attendance[index]
-                                                          ['time_in'],
-                                                      attendance[index]
-                                                          ['time_out'])
-                                                ],
-                                              )
-                                            ],
-                                          ))
-                                    ],
-                                  ),
-                                )
-                              ]),
+                            color: attendance[index]['overdue'] == 1 ? Colors.redAccent : Color(0xFF2979FF),
+                            elevation: 0,
+                            child: Container(
+                              child: Padding(
+                                padding: EdgeInsets.all(7),
+                                child: Stack(children: <Widget>[
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10, top: 5),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Row(
+                                                  children: <Widget>[
+                                                    //icon kalender
+                                                    // attendanceIcon(
+                                                    //     attendance[index]),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    //Hari dan Tanggal
+                                                    attendanceDate(
+                                                        attendance[index]
+                                                            ['date']),
+                                                    Spacer(),
+                                                    attendanceStatus(
+                                                        attendance[index]
+                                                            ['overdue']),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 20,
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: <Widget>[
+                                                    attendanceTime(
+                                                        attendance[index]
+                                                            ['time_in'],
+                                                        attendance[index]
+                                                            ['time_out'])
+                                                  ],
+                                                )
+                                              ],
+                                            ))
+                                      ],
+                                    ),
+                                  )
+                                ]),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }),
-              ),
-            ],
+                        );
+                      }),
+                ),
+              ],
+            ),
           ),
-        )));
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.picture_as_pdf),
+            onPressed: () => {},
+            foregroundColor: Colors.white,
+            backgroundColor: Color(0xFF2979FF),
+          ),
+        ));
   }
 
   _top() {
@@ -235,22 +241,32 @@ class _CardMenuState extends State<CardMenu> {
 
   Widget attendanceDate(date) {
     DateTime todayDate = DateTime.parse(date);
+    var formatter = new DateFormat('dd-MMM-yyyy');
+    String thisDate = formatter.format(todayDate);
+
     var day = getDay(todayDate.weekday);
     return Align(
       alignment: Alignment.centerLeft,
-      child: RichText(
-        text: TextSpan(
-          text: day.toString(),
-          style: TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
-          children: <TextSpan>[
-            TextSpan(
-                text: '\n${date}',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold)),
-          ],
+      child: Padding(
+        padding: EdgeInsets.only(left: 10.0),
+        child: RichText(
+          text: TextSpan(
+            text: day.toString(),
+            style: TextStyle(
+                fontWeight: FontWeight.w700, 
+                color: Colors.white, 
+                fontSize: 17, 
+                fontFamily: 'Nunito'),
+            children: <TextSpan>[
+              TextSpan(
+                  text: '\n${thisDate}',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Nunito')),
+            ],
+          ),
         ),
       ),
     );
@@ -258,7 +274,7 @@ class _CardMenuState extends State<CardMenu> {
 
   Widget attendanceStatus(data) {
     String status = (data == 1) ? "Terlambat" : "Tepat Waktu";
-    MaterialColor status_color = (data == 1) ? Colors.red : Colors.green;
+    // MaterialColor status_color = (data == 1) ? Colors.red : Colors.green;
     return Padding(
       padding: EdgeInsets.only(bottom: 15),
       child: Align(
@@ -266,7 +282,9 @@ class _CardMenuState extends State<CardMenu> {
         child: RichText(
           text: TextSpan(
             text: status,
-            style: TextStyle(color: status_color, fontSize: 14),
+            style: TextStyle(
+              color: Colors.white, 
+              fontSize: 14),
           ),
         ),
       ),
@@ -285,13 +303,20 @@ class _CardMenuState extends State<CardMenu> {
               text: TextSpan(
                 text: '\n\Jam Masuk : ${time_in}',
                 style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w300,
+                  fontFamily: 'Nunito'
                 ),
                 children: <TextSpan>[
                   TextSpan(
                       text: '\nJam Keluar : ${time_out}',
-                      style: TextStyle(color: Colors.grey, fontSize: 16)),
+                      style: TextStyle(
+                        color: Colors.white, 
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                        fontFamily: 'Nunito')
+                      ),
                 ],
               ),
             ),
@@ -300,4 +325,6 @@ class _CardMenuState extends State<CardMenu> {
       ),
     );
   }
+
+  
 }

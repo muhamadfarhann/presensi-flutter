@@ -23,13 +23,12 @@ class _AbsentFormState extends State<AbsentForm> {
   AppConfig config = new AppConfig();
   SharedPreferences sharedPreferences;
   DateTime periode = DateTime.now();
-  String firstDate;
-  String lastDate;
+  String firstDate = "";
+  String lastDate = "";
   String typeValue;
   List types = ["Izin", "Sakit", "Cuti"];
   TextEditingController noteController = TextEditingController();
 
-  
   ProgressDialog progressDialog;
 
   @override
@@ -100,7 +99,7 @@ class _AbsentFormState extends State<AbsentForm> {
                 iconSize: 30,
                 color: Colors.white,
                 // onPressed: () => _selectDate(context),
-                onPressed: () => _selectDate(context)),
+                onPressed: (){}),
           ),
         ],
       ),
@@ -115,131 +114,145 @@ class _AbsentFormState extends State<AbsentForm> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30.0),
-              bottomRight: Radius.circular(30.0),
-              topLeft: Radius.circular(30.0),
-              topRight: Radius.circular(30.0),
-            ),
+            bottomLeft: Radius.circular(30.0),
+            bottomRight: Radius.circular(30.0),
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
+          ),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 20, top: 0),
-            child: Text(
-              "Lama Izin : ${firstDate} s/d ${lastDate}",
-              style: TextStyle(
-                fontSize: 15,
-                fontFamily: 'Nunito',
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 9),
-            child: IconButton(
-              icon: Icon(AntDesign.calendar),
-              onPressed: () {
-                _selectDate(context);
-              },
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
-              "Keterangan :",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Nunito'),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: DropdownButton(
-              hint: Text(
-                "- Pilih Keterangan -",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Nunito',
-                ),
-              ),
-              value: typeValue,
-              items: types.map((value) {
-                return DropdownMenuItem(
-                  child: new Text(value),
-                  value: value,
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  typeValue = value;
-                });
-              },
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
-              "Catatan",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Nunito',
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: TextField(
-              controller: noteController,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Nunito'),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: FlatButton(
-              onPressed: () {
-                progressDialog.show();
-                Future.delayed(Duration(seconds: 2)).then((value) {
-                  // progressDialog.update(message: "Menyambungkan");
-                  absent(noteController.text);
-                  progressDialog.hide();
-                  
-                });
-              },
-              textColor: Colors.white,
-              padding: EdgeInsets.all(0.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Color(0xFF2979FF),
-                ),
-                //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                width: double.infinity,
-                alignment: Alignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 20, top: 0),
                 child: Text(
-                  'Simpan',
-                  style: TextStyle(fontSize: 15),
+                  "Pilih Lama Izin",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-            ),
-          )
-        ]));
+              Padding(
+                  padding: EdgeInsets.only(left: 9),
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(AntDesign.calendar),
+                        onPressed: () {
+                          _selectDate(context);
+                        },
+                      ),
+                      Text(
+                        "${firstDate} s/d ${lastDate}",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Nunito',
+                        ),
+                      )
+                    ],
+                  )),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                  "Keterangan :",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Nunito'),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: DropdownButton(
+                  hint: Text(
+                    "- Pilih Keterangan -",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Nunito',
+                    ),
+                  ),
+                  value: typeValue,
+                  items: types.map((value) {
+                    return DropdownMenuItem(
+                      child: new Text(value),
+                      value: value,
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      typeValue = value;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                  "Catatan",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Nunito',
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: TextField(
+                  controller: noteController,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Nunito'),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: FlatButton(
+                  onPressed: () {
+                    if (firstDate == '' || lastDate == '' || typeValue == '') {
+                      showAlertDialog('Failed','Input Data Dengan Benar',
+                          DialogType.ERROR, context, () {});
+                    } else {
+                      progressDialog.show();
+                      Future.delayed(Duration(seconds: 2)).then((value) {
+                        // progressDialog.update(message: "Menyambungkan");
+                        absent(noteController.text);
+                        progressDialog.hide();
+                      });
+                    }
+                  },
+                  textColor: Colors.white,
+                  padding: EdgeInsets.all(0.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Color(0xFF2979FF),
+                    ),
+                    //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Simpan',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                ),
+              )
+            ]));
   }
 
   // Method memilih tanggal
@@ -247,7 +260,7 @@ class _AbsentFormState extends State<AbsentForm> {
     final List<DateTime> picked = await DateRangePicker.showDatePicker(
         context: context,
         initialFirstDate: (new DateTime.now()),
-        initialLastDate: new DateTime.now().add(new Duration(days: 7)),
+        initialLastDate: new DateTime.now().add(new Duration(days: 3)),
         firstDate: new DateTime(2015),
         lastDate: new DateTime(2021));
 
