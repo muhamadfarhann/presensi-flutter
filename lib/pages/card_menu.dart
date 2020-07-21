@@ -13,9 +13,10 @@ class CardMenu extends StatefulWidget {
 }
 
 class _CardMenuState extends State<CardMenu> {
+
   List attendance;
   DateTime periode = DateTime.now();
-  AppConfig config = new AppConfig();
+  AppConfig config = new AppConfig(); 
 
   // Method memilih tanggal
   Future<Null> _selectDate(BuildContext context) async {
@@ -30,6 +31,7 @@ class _CardMenuState extends State<CardMenu> {
       print("Ini Tangggal Awal ${picked[0]}");
       print("Ini Tangggal Akhir ${picked[1]}");
     }
+    
   }
 
   Future<String> getData() async {
@@ -84,9 +86,10 @@ class _CardMenuState extends State<CardMenu> {
                           width: double.maxFinite,
                           child: Card(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            color: attendance[index]['overdue'] == 1 ? Colors.redAccent : Color(0xFF2979FF),
+                                borderRadius: BorderRadius.circular(10)),
+                            color: attendance[index]['overdue'] == 1
+                                ? Colors.redAccent
+                                : Color(0xFF2979FF),
                             elevation: 0,
                             child: Container(
                               child: Padding(
@@ -253,9 +256,9 @@ class _CardMenuState extends State<CardMenu> {
           text: TextSpan(
             text: day.toString(),
             style: TextStyle(
-                fontWeight: FontWeight.w700, 
-                color: Colors.white, 
-                fontSize: 17, 
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                fontSize: 17,
                 fontFamily: 'Nunito'),
             children: <TextSpan>[
               TextSpan(
@@ -282,9 +285,7 @@ class _CardMenuState extends State<CardMenu> {
         child: RichText(
           text: TextSpan(
             text: status,
-            style: TextStyle(
-              color: Colors.white, 
-              fontSize: 14),
+            style: TextStyle(color: Colors.white, fontSize: 14),
           ),
         ),
       ),
@@ -303,20 +304,18 @@ class _CardMenuState extends State<CardMenu> {
               text: TextSpan(
                 text: '\n\Jam Masuk : ${time_in}',
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w300,
-                  fontFamily: 'Nunito'
-                ),
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                    fontFamily: 'Nunito'),
                 children: <TextSpan>[
                   TextSpan(
                       text: '\nJam Keluar : ${time_out}',
                       style: TextStyle(
-                        color: Colors.white, 
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                        fontFamily: 'Nunito')
-                      ),
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                          fontFamily: 'Nunito')),
                 ],
               ),
             ),
@@ -325,6 +324,4 @@ class _CardMenuState extends State<CardMenu> {
       ),
     );
   }
-
-  
 }

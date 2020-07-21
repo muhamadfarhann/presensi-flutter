@@ -248,9 +248,9 @@ class _DashboardState extends State<Dashboard> {
               children: <Widget>[
                 gridItem(AntDesign.filetext1, "TODO", 1),
                 gridItem(AntDesign.solution1, "Lapor Absensi", 2),
-                gridItem(Icons.laptop, "Riwayat TODO", 3),
+                gridItem(AntDesign.laptop, "Riwayat TODO", 3),
                 gridItem(AntDesign.calendar, "Riwayat Presensi", 4),
-                gridItem(AntDesign.poweroff, "Riwayat Absensi", 5),
+                gridItem(AntDesign.dotchart, "Riwayat Absensi", 5),
                 gridItem(AntDesign.linechart, "Rekap Kehadiran", 6),
                 gridItem(AntDesign.carryout, "Tutup Buku", 7),
               ],
@@ -342,9 +342,15 @@ class _DashboardState extends State<Dashboard> {
                         List<Widget> children;
                         if (snapshot.hasData) {
                           children = <Widget>[
-                            CircleAvatar(
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+                              },
+                              child: CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                    "${config.apiURL}/images/${snapshot.data.photo}")),
+                                    "${config.apiURL}/images/${snapshot.data.photo}"),
+                              ),
+                            ),
                             SizedBox(
                               width: 10.0,
                             ),
@@ -403,12 +409,12 @@ class _DashboardState extends State<Dashboard> {
           onTap: () {
             switch (number) {
               case 1:
-               Navigator.push(context,
+                Navigator.push(context,
                     MaterialPageRoute(builder: (context) => MultiTodoForm()));
                 break;
-                
+
               case 2:
-               Navigator.push(context,
+                Navigator.push(context,
                     MaterialPageRoute(builder: (context) => AbsentForm()));
                 break;
 

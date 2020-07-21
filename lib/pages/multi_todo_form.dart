@@ -16,9 +16,11 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
   Widget build(BuildContext context) {
     var length;
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         elevation: .0,
         backgroundColor: Color(0xFF2979FF),
+        brightness: Brightness.dark,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(30),
@@ -32,11 +34,13 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
           },
         ),
         title: Padding(
-          padding: EdgeInsets.only(left: 35),
+          padding: EdgeInsets.only(left: 30),
           child: Text(
             'Pengisian Todo Harian',
             style: TextStyle(
               fontFamily: 'Nunito',
+              fontSize: 16,
+              fontWeight: FontWeight.w700
             ),
           ),
         ),

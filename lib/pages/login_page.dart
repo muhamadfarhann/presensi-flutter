@@ -272,7 +272,9 @@ class _LoginPageState extends State<LoginPage> {
           alignment: Alignment.center,
           child: Text(
             'Login',
-            style: TextStyle(fontSize: 17, fontFamily: 'Nunito'),
+            style: TextStyle(
+              fontSize: 17, 
+              fontFamily: 'Nunito'),
           ),
         ),
       ),
