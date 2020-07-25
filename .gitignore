@@ -32,6 +32,7 @@
 
 # Web related
 lib/generated_plugin_registrant.dart
+lib/configs/app_config.dart
 
 # Symbolication related
 app.*.symbols
