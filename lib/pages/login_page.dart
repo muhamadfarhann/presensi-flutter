@@ -77,7 +77,6 @@ class _LoginPageState extends State<LoginPage> {
           _isLoading = false;
           _error = "Terjadi Kesalahan Sistem";
         });
-        print(response.body);
       }
     }
   }
@@ -133,8 +132,7 @@ class _LoginPageState extends State<LoginPage> {
           headers: requestHeaders);
       final responseJson2 = json.decode(response2.body);
       sharedPreferences.setInt("employee_id", responseJson2['employee']['id']);
-      print(sharedPreferences.getInt("employee_id").toString());
-      print(responseJson2);
+     
 
       String timeIn = 'Belum Absen';
       String timeOut = 'Belum Absen';
@@ -147,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                 ? responseJson2['employee']['attendance']['time_out']
                 : "Belum Absen";
       }
-
+      
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => Dashboard()),
           (Route<dynamic> route) => false);
@@ -409,9 +407,9 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: height * .20),
+                  SizedBox(height: height * .15),
                   _title(),
-                  SizedBox(height: height * .105),
+                  SizedBox(height: height * .070),
                   // showAlert(),
                   Container(
                     padding: EdgeInsets.all(20),

@@ -1,8 +1,16 @@
+import 'dart:convert';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:presensi/configs/app_config.dart';
 import 'package:presensi/models/todo.dart';
 // import 'package:flutter_multipage_form/empty_state.dart';
 import 'package:presensi/pages/TodoForm.dart';
+import 'package:presensi/pages/dashboard.dart';
 import 'package:presensi/pages/empty_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http/http.dart' as http;
 
 class MultiTodoForm extends StatefulWidget {
   @override
@@ -11,6 +19,18 @@ class MultiTodoForm extends StatefulWidget {
 
 class _MultiTodoFormState extends State<MultiTodoForm> {
   List<TodoForm> todos = [];
+  SharedPreferences sharedPreferences;
+
+  @override
+  void initState() {
+    _pref();
+    super.initState();
+  }
+
+  _pref() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return this.sharedPreferences = sharedPreferences;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +58,9 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
           child: Text(
             'Pengisian Todo Harian',
             style: TextStyle(
-              fontFamily: 'Nunito',
-              fontSize: 16,
-              fontWeight: FontWeight.w700
-            ),
+                fontFamily: 'Nunito',
+                fontSize: 16,
+                fontWeight: FontWeight.w700),
           ),
         ),
         actions: <Widget>[
@@ -110,33 +129,75 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
   }
 
   ///on save forms
-  void onSave() {
+  onSave() async {
     if (todos.length > 0) {
       var allValid = true;
       todos.forEach((form) => allValid = allValid && form.isValid());
       if (allValid) {
         var data = todos.map((it) => it.todo).toList();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (_) => Scaffold(
-              appBar: AppBar(
-                title: Text('List of Todos'),
-              ),
-              body: ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (_, i) => ListTile(
-                  leading: CircleAvatar(
-                    child: Text(data[i].task.substring(0, 1)),
-                  ),
-                  title: Text(data[i].task),
-                ),
-              ),
-            ),
-          ),
-        );
+        var todo = List();
+        for (var i = 0; i < data.length; i++) {
+          var td = {'todo': data[i].task};
+          todo.add(data[i].task);
+        }
+        AppConfig config = new AppConfig();
+        var param = json.encode({
+          'employee_id': sharedPreferences.getInt("employee_id").toString(),
+          "todos": todo
+        });
+
+        var jsonResponse = null;
+        var response = await http.post("${config.apiURL}/api/todo/store",
+            body: param, headers: {'Content-type': 'application/json'});
+        if (response.statusCode == 200) {
+          jsonResponse = json.decode(response.body);
+          showAlertDialog(
+              'Success', jsonResponse['message'], DialogType.SUCCES, context,
+              () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Dashboard()));
+          });
+        } else {
+          jsonResponse = json.decode(response.body);
+          showAlertDialog('Failed', jsonResponse['message'], DialogType.ERROR,
+              context, () {});
+        }
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     fullscreenDialog: true,
+        //     builder: (_) => Scaffold(
+        //       appBar: AppBar(
+        //         title: Text('List of Todos'),
+        //       ),
+        //       body: ListView.builder(
+        //         itemCount: data.length,
+        //         itemBuilder: (_, i) => ListTile(
+        //           leading: CircleAvatar(
+        //             child: Text(data[i].task.substring(0, 1)),
+        //           ),
+        //           title: Text(data[i].task),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // );
       }
     }
+  }
+
+  void showAlertDialog(String title, String message, DialogType dialogType,
+      BuildContext context, VoidCallback onOkPress) {
+    AwesomeDialog(
+            context: context,
+            animType: AnimType.TOPSLIDE,
+            dialogType: dialogType,
+            title: title,
+            headerAnimationLoop: false,
+            desc: message,
+            btnOkIcon: Icons.check_circle,
+            btnOkColor: Color(0xFF2979FF),
+            btnOkOnPress: onOkPress)
+        .show();
   }
 }

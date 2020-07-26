@@ -7,13 +7,13 @@ import 'package:presensi/configs/app_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
-class CardMenu extends StatefulWidget {
+class ReportAbsent extends StatefulWidget {
   @override
-  _CardMenuState createState() => _CardMenuState();
+  _ReportAbsentState createState() => _ReportAbsentState();
 }
 
-class _CardMenuState extends State<CardMenu> {
-  List attendance;
+class _ReportAbsentState extends State<ReportAbsent> {
+  List absent;
   DateTime periode = DateTime.now();
   AppConfig config = new AppConfig();
   String firstDate = "";
@@ -49,14 +49,14 @@ class _CardMenuState extends State<CardMenu> {
     };
 
     var res =
-        await http.post("${config.apiURL}/api/attendance/periode", body: data);
+        await http.post("${config.apiURL}/api/absent/periode", body: data);
 
     setState(() {
       //RESPONSE YANG DIDAPATKAN DARI API TERSEBUT DI DECODE
       var content = json.decode(res.body);
       //KEMUDIAN DATANYA DISIMPAN KE DALAM VARIABLE data,
       //DIMANA SECARA SPESIFIK YANG INGIN KITA AMBIL ADALAH ISI DARI KEY hasil
-      attendance = content['data'];
+      absent = content['data'];
     });
     return 'success!';
   }
@@ -68,7 +68,6 @@ class _CardMenuState extends State<CardMenu> {
 
   @override
   Widget build(BuildContext context) {
-    print(attendance);
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -94,7 +93,7 @@ class _CardMenuState extends State<CardMenu> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                      itemCount: attendance == null ? 0 : attendance.length,
+                      itemCount: absent == null ? 0 : absent.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
                           padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -103,9 +102,7 @@ class _CardMenuState extends State<CardMenu> {
                           child: Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
-                            color: attendance[index]['overdue'] == 1
-                                ? Colors.redAccent
-                                : Color(0xFF2979FF),
+                            color: getColor(absent[index]['status']),
                             elevation: 0,
                             child: Container(
                               child: Padding(
@@ -129,13 +126,13 @@ class _CardMenuState extends State<CardMenu> {
                                                       height: 10,
                                                     ),
                                                     //Hari dan Tanggal
-                                                    attendanceDate(
-                                                        attendance[index]
+                                                    absentDate(
+                                                        absent[index]
                                                             ['date']),
                                                     Spacer(),
-                                                    attendanceStatus(
-                                                        attendance[index]
-                                                            ['overdue']),
+                                                    absentStatus(
+                                                        absent[index]
+                                                            ['status']),
                                                     SizedBox(
                                                       width: 10,
                                                     ),
@@ -146,11 +143,11 @@ class _CardMenuState extends State<CardMenu> {
                                                 ),
                                                 Row(
                                                   children: <Widget>[
-                                                    attendanceTime(
-                                                        attendance[index]
-                                                            ['time_in'],
-                                                        attendance[index]
-                                                            ['time_out'])
+                                                    absentNote(
+                                                        absent[index]
+                                                            ['type'],
+                                                        absent[index]
+                                                            ['note'])
                                                   ],
                                                 )
                                               ],
@@ -177,6 +174,16 @@ class _CardMenuState extends State<CardMenu> {
         ));
   }
 
+  getColor(status) {
+    if(status == "Pending") {
+      return Colors.orange;
+    } else if(status == "Diterima") {
+      return Color(0xFF2979FF);
+    } else {
+      return Colors.red;
+    }
+  }
+  
   _top() {
     return Container(
       padding: EdgeInsets.only(top: 35, bottom: 10),
@@ -198,7 +205,7 @@ class _CardMenuState extends State<CardMenu> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 60),
             child: Text(
-              'Riwayat Kehadiran',
+              'Riwayat Ketidakhadiran',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -258,7 +265,7 @@ class _CardMenuState extends State<CardMenu> {
     }
   }
 
-  Widget attendanceDate(date) {
+  Widget absentDate(date) {
     DateTime todayDate = DateTime.parse(date);
     var formatter = new DateFormat('dd-MMM-yyyy');
     String thisDate = formatter.format(todayDate);
@@ -291,8 +298,8 @@ class _CardMenuState extends State<CardMenu> {
     );
   }
 
-  Widget attendanceStatus(data) {
-    String status = (data == 1) ? "Terlambat" : "Tepat Waktu";
+  Widget absentStatus(data) {
+    
     // MaterialColor status_color = (data == 1) ? Colors.red : Colors.green;
     return Padding(
       padding: EdgeInsets.only(bottom: 15),
@@ -300,7 +307,7 @@ class _CardMenuState extends State<CardMenu> {
         alignment: Alignment.topRight,
         child: RichText(
           text: TextSpan(
-            text: status,
+            text: data,
             style: TextStyle(color: Colors.white, fontSize: 14),
           ),
         ),
@@ -308,7 +315,7 @@ class _CardMenuState extends State<CardMenu> {
     );
   }
 
-  Widget attendanceTime(time_in, time_out) {
+  Widget absentNote(type, note) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
@@ -318,7 +325,7 @@ class _CardMenuState extends State<CardMenu> {
             RichText(
               textAlign: TextAlign.left,
               text: TextSpan(
-                text: '\n\Jam Masuk : ${time_in}',
+                text: '\n\Keterangan : ${type}',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -326,7 +333,7 @@ class _CardMenuState extends State<CardMenu> {
                     fontFamily: 'Nunito'),
                 children: <TextSpan>[
                   TextSpan(
-                      text: '\nJam Keluar : ${time_out}',
+                      text: '\nCatatan : ${note}',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,

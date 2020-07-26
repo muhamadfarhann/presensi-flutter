@@ -17,6 +17,7 @@ import 'package:presensi/pages/card_menu.dart';
 import 'package:presensi/pages/login_page.dart';
 import 'package:presensi/pages/multi_todo_form.dart';
 import 'package:presensi/pages/profile.dart';
+import 'package:presensi/pages/report_absent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
@@ -418,9 +419,26 @@ class _DashboardState extends State<Dashboard> {
                     MaterialPageRoute(builder: (context) => AbsentForm()));
                 break;
 
+              case 3:
+
+                break;
+
               case 4:
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => CardMenu()));
+                break;
+
+              case 5:
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ReportAbsent()));
+                break;
+
+              case 6:
+
+                break;
+
+              case 7:
+
                 break;
               default:
             }
