@@ -248,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20),
+                  borderRadius: BorderRadius.all(Radius.circular(10),
                   )
                 ),
                 hintText: "Input Password",
