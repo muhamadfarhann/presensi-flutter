@@ -79,18 +79,28 @@ class _ReportAbsentState extends State<ReportAbsent> {
               children: <Widget>[
                 _top(),
                 SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Periode : ${firstDate} s/d ${lastDate}",
-                      style: TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                Container(
+                      padding: EdgeInsets.only(
+                          top: 5, bottom: 5, left: 15, right: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.blue[100],
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue[100],
+                            spreadRadius: 3,
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        "Periode : ${firstDate} s/d ${lastDate}",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontFamily: 'Nunito',
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ],
-                ),
                 Expanded(
                   child: ListView.builder(
                       itemCount: absent == null ? 0 : absent.length,
@@ -203,21 +213,21 @@ class _ReportAbsentState extends State<ReportAbsent> {
             },
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 60),
+            margin: EdgeInsets.symmetric(horizontal: 50),
             child: Text(
               'Riwayat Ketidakhadiran',
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 15,
                   fontFamily: 'Nunito',
                   fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 10),
+            padding: EdgeInsets.only(left: 0),
             child: IconButton(
                 icon: Icon(Icons.date_range),
-                iconSize: 30,
+                iconSize: 20,
                 color: Colors.white,
                 // onPressed: () => _selectDate(context),
                 onPressed: () => _selectDate(context)),

@@ -86,7 +86,7 @@ class _AbsentFormState extends State<AbsentForm> {
               'Lapor Ketidakhadiran',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.w700,
                 fontFamily: 'Nunito',
               ),
@@ -99,7 +99,7 @@ class _AbsentFormState extends State<AbsentForm> {
                 iconSize: 30,
                 color: Colors.white,
                 // onPressed: () => _selectDate(context),
-                onPressed: (){}),
+                onPressed: () {}),
           ),
         ],
       ),
@@ -126,11 +126,11 @@ class _AbsentFormState extends State<AbsentForm> {
               Padding(
                 padding: EdgeInsets.only(left: 20, top: 0),
                 child: Text(
-                  "Pilih Lama Izin",
+                  "Pilih Lama Izin :",
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'Nunito',
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
@@ -144,13 +144,28 @@ class _AbsentFormState extends State<AbsentForm> {
                           _selectDate(context);
                         },
                       ),
-                      Text(
-                        "${firstDate} s/d ${lastDate}",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: 'Nunito',
+                      Container(
+                        padding: EdgeInsets.only(
+                            top: 5, bottom: 5, left: 15, right: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.blue[100],
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue[100],
+                              spreadRadius: 3,
+                            ),
+                          ],
                         ),
-                      )
+                        child: Text(
+                          "${firstDate} s/d ${lastDate}",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontFamily: 'Nunito',
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ],
                   )),
               SizedBox(
@@ -161,8 +176,8 @@ class _AbsentFormState extends State<AbsentForm> {
                 child: Text(
                   "Keterangan :",
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
                       fontFamily: 'Nunito'),
                 ),
               ),
@@ -172,7 +187,7 @@ class _AbsentFormState extends State<AbsentForm> {
                   hint: Text(
                     "- Pilih Keterangan -",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Nunito',
                     ),
@@ -197,10 +212,10 @@ class _AbsentFormState extends State<AbsentForm> {
               Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: Text(
-                  "Catatan",
+                  "Catatan :",
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
                     fontFamily: 'Nunito',
                   ),
                 ),
@@ -223,7 +238,7 @@ class _AbsentFormState extends State<AbsentForm> {
                 child: FlatButton(
                   onPressed: () {
                     if (firstDate == '' || lastDate == '' || typeValue == '') {
-                      showAlertDialog('Failed','Input Data Dengan Benar',
+                      showAlertDialog('Failed', 'Input Data Dengan Benar',
                           DialogType.ERROR, context, () {});
                     } else {
                       progressDialog.show();
@@ -238,7 +253,7 @@ class _AbsentFormState extends State<AbsentForm> {
                   padding: EdgeInsets.all(0.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(20),
                       color: Color(0xFF2979FF),
                     ),
                     //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
@@ -247,7 +262,10 @@ class _AbsentFormState extends State<AbsentForm> {
                     alignment: Alignment.center,
                     child: Text(
                       'Simpan',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: "Nunito"),
                     ),
                   ),
                 ),

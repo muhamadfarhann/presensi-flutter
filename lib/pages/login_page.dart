@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +134,6 @@ class _LoginPageState extends State<LoginPage> {
           headers: requestHeaders);
       final responseJson2 = json.decode(response2.body);
       sharedPreferences.setInt("employee_id", responseJson2['employee']['id']);
-     
 
       String timeIn = 'Belum Absen';
       String timeOut = 'Belum Absen';
@@ -145,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                 ? responseJson2['employee']['attendance']['time_out']
                 : "Belum Absen";
       }
-      
+
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => Dashboard()),
           (Route<dynamic> route) => false);
@@ -175,7 +176,10 @@ class _LoginPageState extends State<LoginPage> {
               child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
             Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: 'Nunito'))
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Nunito'))
           ],
         ),
       ),
@@ -190,8 +194,10 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, 
-                          fontFamily: 'Nunito'),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                fontFamily: 'Nunito'),
           ),
           SizedBox(
             height: 10,
@@ -199,13 +205,19 @@ class _LoginPageState extends State<LoginPage> {
           TextField(
               controller: emailController,
               style: TextStyle(
-                fontFamily: "Nunito"
+                fontFamily: "Nunito",
+                fontSize: 15,
               ),
               decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Input Email",
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true))
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10),
+                  )
+                ),
+                hintText: "example@gmail.com",
+                fillColor: Color(0xfff3f3f4),
+                filled: false,
+            ),
+            )
         ],
       ),
     );
@@ -219,19 +231,31 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, fontFamily: 'Nunito'),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                fontFamily: 'Nunito'),
           ),
           SizedBox(
             height: 10,
           ),
           TextField(
-              controller: passwordController,
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Input Password",
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true))
+            controller: passwordController,
+            obscureText: isPassword,
+            style: TextStyle(
+              fontSize: 15,
+              fontFamily: "Nunito",
+            ),
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20),
+                  )
+                ),
+                hintText: "Input Password",
+                fillColor: Color(0xfff3f3f4),
+                filled: false,
+            ),
+          ),
         ],
       ),
     );
@@ -242,7 +266,7 @@ class _LoginPageState extends State<LoginPage> {
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(vertical: 15),
       alignment: Alignment.center,
-      child: RaisedButton(
+      child: FlatButton(
         onPressed: emailController.text == "" || passwordController.text == ""
             ? null
             : () {
@@ -260,19 +284,17 @@ class _LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.all(0.0),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: <Color>[Color(0xFF29B6FC), Color(0xFF2979FF)],
-            ),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            color: Color(0xFF2979FF),
           ),
           //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
           width: double.infinity,
           alignment: Alignment.center,
           child: Text(
             'Login',
             style: TextStyle(
-              fontSize: 17, 
-              fontFamily: 'Nunito'),
+                fontSize: 15, fontFamily: 'Nunito', color: Colors.white),
           ),
         ),
       ),
@@ -297,7 +319,10 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Text(
               'Belum Memiliki Akun ?',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Nunito'),
+              style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Nunito'),
             ),
             SizedBox(
               width: 10,

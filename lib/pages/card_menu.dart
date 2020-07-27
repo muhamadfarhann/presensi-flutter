@@ -66,29 +66,51 @@ class _CardMenuState extends State<CardMenu> {
     super.initState(); //PANGGIL FUNGSI YANG TELAH DIBUAT SEBELUMNYA
   }
 
+  Future<Null> refresh() async {
+    await Future.delayed(Duration(seconds: 2));
+  }
+
   @override
   Widget build(BuildContext context) {
     print(attendance);
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: Container(
+          body: RefreshIndicator(
+            onRefresh: refresh,
             color: Colors.grey[200],
             child: Column(
               // mainAxisSize: MainAxisSize.max,
               // mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 _top(),
-                SizedBox(height: 25),
+                SizedBox(
+                  height: 20,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      "Periode : ${firstDate} s/d ${lastDate}",
-                      style: TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: 5, bottom: 5, left: 15, right: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.blue[100],
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue[100],
+                            spreadRadius: 3,
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        "Periode : ${firstDate} s/d ${lastDate}",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontFamily: 'Nunito',
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -207,10 +229,10 @@ class _CardMenuState extends State<CardMenu> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 10),
+            padding: EdgeInsets.only(left: 10),
             child: IconButton(
                 icon: Icon(Icons.date_range),
-                iconSize: 30,
+                iconSize: 25,
                 color: Colors.white,
                 // onPressed: () => _selectDate(context),
                 onPressed: () => _selectDate(context)),

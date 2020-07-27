@@ -37,10 +37,7 @@ class _TodoFormState extends State<TodoForm> {
                 elevation: 0,
                 title: Text(
                   'Todo Detail',
-                  style: TextStyle(
-                    fontFamily: 'Nunito',
-                    fontSize: 16
-                  ),
+                  style: TextStyle(fontFamily: 'Nunito', fontSize: 16),
                 ),
                 backgroundColor: Color(0xFF2979FF),
                 centerTitle: true,
@@ -52,12 +49,18 @@ class _TodoFormState extends State<TodoForm> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
+                padding:
+                    EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
                 child: TextFormField(
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Nunito",
+                  ),
                   initialValue: widget.todo.task,
                   onSaved: (val) => widget.todo.task = val,
                   validator: (val) =>
-                      val.length > 3 ? null : 'Todo is invalid',
+                      val.length > 3 ? null : 'Isi Todo dengan benar',
                   decoration: InputDecoration(
                     labelText: 'Task',
                     hintText: 'Input Task',

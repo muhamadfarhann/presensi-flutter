@@ -387,13 +387,17 @@ class _DashboardState extends State<Dashboard> {
             height: 20.0,
           ),
           TextField(
+            style: TextStyle(
+              fontFamily: "Nunito",
+              fontSize: 15,
+            ),
             decoration: InputDecoration(
                 hintText: "Search anything to do",
                 fillColor: Colors.white,
                 filled: true,
                 suffixIcon: Icon(Icons.filter_list),
                 enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide(color: Colors.transparent)),
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0)),

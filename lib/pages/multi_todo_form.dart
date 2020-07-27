@@ -59,7 +59,7 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
             'Pengisian Todo Harian',
             style: TextStyle(
                 fontFamily: 'Nunito',
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.w700),
           ),
         ),
