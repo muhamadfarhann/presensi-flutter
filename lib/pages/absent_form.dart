@@ -20,7 +20,8 @@ class AbsentForm extends StatefulWidget {
 class _AbsentFormState extends State<AbsentForm> {
 
   // Instansiasi API URL
-  AppConfig config = new AppConfig();  
+  AppConfig config = new AppConfig();
+  // 
 
   // Session
   SharedPreferences sharedPreferences;
