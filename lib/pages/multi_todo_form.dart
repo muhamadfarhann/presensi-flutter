@@ -1,13 +1,10 @@
 import 'dart:convert';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:presensi/configs/app_config.dart';
 import 'package:presensi/models/todo.dart';
-// import 'package:flutter_multipage_form/empty_state.dart';
 import 'package:presensi/pages/TodoForm.dart';
 import 'package:presensi/pages/dashboard.dart';
-import 'package:presensi/pages/empty_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
@@ -38,7 +35,7 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        elevation: .0,
+        elevation: 0,
         backgroundColor: Color(0xFF2979FF),
         brightness: Brightness.dark,
         shape: RoundedRectangleBorder(
@@ -128,7 +125,7 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
     });
   }
 
-  ///on save forms
+  // on save forms
   onSave() async {
     if (todos.length > 0) {
       var allValid = true;

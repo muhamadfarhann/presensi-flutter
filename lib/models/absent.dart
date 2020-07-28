@@ -1,5 +1,7 @@
+// Class Absent
 class Absent {
   
+  // Variabel yang dibutuhkan untuk absen atau tidak hadir
   int id;
   String employeeId;
   String type;
@@ -7,6 +9,7 @@ class Absent {
   String lastDate;
   String note;
 
+  // Method constructor
   Absent({
     this.id = 0,
     this.employeeId,

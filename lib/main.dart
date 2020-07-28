@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:presensi/pages/home.dart';
 import 'package:presensi/pages/login_page.dart';
-import 'package:presensi/pages/profile.dart';
-import 'package:presensi/pages/sign_up.dart';
-import 'package:presensi/pages/welcome_page.dart';
 
 void main() => runApp(MyApp());
 

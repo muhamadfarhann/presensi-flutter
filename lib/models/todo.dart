@@ -1,5 +1,12 @@
+// Class Todo
 class Todo {
+
+  // Variabel untuk membuat todo
   String task;
 
-  Todo({this.task = ''});
+  // Method constructor
+  Todo({
+    this.task = ''
+  });
+
 }

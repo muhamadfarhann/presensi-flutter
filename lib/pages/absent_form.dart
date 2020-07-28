@@ -18,14 +18,23 @@ class AbsentForm extends StatefulWidget {
 }
 
 class _AbsentFormState extends State<AbsentForm> {
-  AppConfig config = new AppConfig();
+
+  // Instansiasi API URL
+  AppConfig config = new AppConfig();  
+
+  // Session
   SharedPreferences sharedPreferences;
+
+  // Variabel untuk periode
   DateTime periode = DateTime.now();
   String firstDate = "";
   String lastDate = "";
+
+  // Variabel untuk absen / tidak hadir
   String typeValue;
   List types = ["Izin", "Sakit", "Cuti"];
   TextEditingController noteController = TextEditingController();
+
   ProgressDialog progressDialog;
 
   // Upload File
@@ -64,6 +73,7 @@ class _AbsentFormState extends State<AbsentForm> {
       });
     }
   }
+  // 
 
   @override
   void initState() {

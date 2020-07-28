@@ -1,14 +1,10 @@
 import 'dart:ui';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:presensi/configs/app_config.dart';
-import 'package:presensi/models/user.dart';
 import 'package:presensi/pages/dashboard.dart';
-import 'package:presensi/pages/home.dart';
 import 'package:presensi/pages/sign_up.dart';
-import 'package:presensi/src/widget/bezzier_container.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;

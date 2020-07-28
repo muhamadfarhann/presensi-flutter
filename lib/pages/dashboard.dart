@@ -8,10 +8,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:presensi/configs/app_config.dart';
-import 'package:presensi/models/absent.dart';
 import 'package:presensi/models/attendance.dart';
 import 'package:presensi/models/user.dart';
-import 'package:presensi/pages/TodoForm.dart';
 import 'package:presensi/pages/absent_form.dart';
 import 'package:presensi/pages/card_menu.dart';
 import 'package:presensi/pages/login_page.dart';
@@ -46,11 +44,10 @@ class _DashboardState extends State<Dashboard> {
   int currentTab = 0;
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen;
+
   final List<Widget> screens = [
     Dashboard(),
-    // Chat(),
     Profile(),
-    // Settings(),
   ];
 
   @override
@@ -112,8 +109,9 @@ class _DashboardState extends State<Dashboard> {
         );
 
         return user;
+
       } else {
-        throw Exception('Failed to load Data');
+          throw Exception('Failed to load Data');
       }
     }
   }
