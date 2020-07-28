@@ -1,18 +1,16 @@
 import 'dart:convert';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
+import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:presensi/configs/app_config.dart';
-import 'package:presensi/models/user.dart';
 import 'package:presensi/pages/dashboard.dart';
-import 'package:presensi/pages/home.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:presensi/models/user.dart';
+import 'package:file_picker/file_picker.dart';
 
 class AbsentForm extends StatefulWidget {
   @override
@@ -28,13 +26,50 @@ class _AbsentFormState extends State<AbsentForm> {
   String typeValue;
   List types = ["Izin", "Sakit", "Cuti"];
   TextEditingController noteController = TextEditingController();
-
   ProgressDialog progressDialog;
+
+  // Upload File
+  String _fileName;
+  String _path;
+  Map<String, String> _paths;
+  String _extension;
+  bool _loadingPath = false;
+  bool _multiPick = false;
+  bool _hasValidMime = false;
+  FileType _pickingType;
+  TextEditingController _controller = new TextEditingController();
+
+  // Method untuk mengupload dan membuka file explorer
+  void _openFileExplorer() async {
+    if (_pickingType != FileType.any || _hasValidMime) {
+      setState(() => _loadingPath = true);
+      try {
+        if (_multiPick) {
+          _path = null;
+          var multiFilePath = FilePicker.getMultiFilePath();
+          _paths = await multiFilePath;
+        } else {
+          _paths = null;
+          _path = await FilePicker.getFilePath();
+        }
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      }
+      if (!mounted) return;
+      setState(() {
+        _loadingPath = false;
+        _fileName = _path != null
+            ? _path.split('/').last
+            : _paths != null ? _paths.keys.toString() : '...';
+      });
+    }
+  }
 
   @override
   void initState() {
     _pref();
     super.initState();
+    _controller.addListener(() => _extension = _controller.text);
   }
 
   _pref() async {
@@ -231,7 +266,77 @@ class _AbsentFormState extends State<AbsentForm> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Text('Upload File :'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  _openFileExplorer();
+                },
+                child: Container(
+                        padding: EdgeInsets.only(
+                            top: 5, bottom: 5, left: 15, right: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.blue[100],
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue[100],
+                              spreadRadius: 3,
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          "Browse...",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontFamily: 'Nunito',
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+              ),
+              Builder(
+                builder: (BuildContext context) => _loadingPath
+                    ? Padding(
+                        padding: EdgeInsets.only(bottom: 10.0),
+                        child: CircularProgressIndicator())
+                    : _path != null || _paths != null
+                        ? Container(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            height: MediaQuery.of(context).size.height * 0.20,
+                            child: Scrollbar(
+                                child: ListView.separated(
+                              itemCount: _paths != null && _paths.isNotEmpty
+                                  ? _paths.length
+                                  : 1,
+                              itemBuilder: (BuildContext context, int index) {
+                                final bool isMultiPath =
+                                    _paths != null && _paths.isNotEmpty;
+                                final String name = 'File $index: ' +
+                                    (isMultiPath
+                                        ? _paths.keys.toList()[index]
+                                        : _fileName ?? '...');
+                                final path = isMultiPath
+                                    ? _paths.values.toList()[index].toString()
+                                    : _path;
+
+                                return ListTile(
+                                  title: Text(
+                                    name,
+                                  ),
+                                  subtitle: Text(path),
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) =>
+                                     Divider(),
+                            )),
+                          )
+                        : Container(),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
@@ -263,9 +368,9 @@ class _AbsentFormState extends State<AbsentForm> {
                     child: Text(
                       'Simpan',
                       style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: "Nunito"),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: "Nunito"),
                     ),
                   ),
                 ),
