@@ -18,10 +18,8 @@ class AbsentForm extends StatefulWidget {
 }
 
 class _AbsentFormState extends State<AbsentForm> {
-
   // Instansiasi API URL
   AppConfig config = new AppConfig();
-  // 
 
   // Session
   SharedPreferences sharedPreferences;
@@ -63,7 +61,7 @@ class _AbsentFormState extends State<AbsentForm> {
           _path = await FilePicker.getFilePath();
         }
       } on PlatformException catch (e) {
-        print("Unsupported operation" + e.toString());
+        print("Tidak mendukung" + e.toString());
       }
       if (!mounted) return;
       setState(() {
@@ -74,7 +72,6 @@ class _AbsentFormState extends State<AbsentForm> {
       });
     }
   }
-  // 
 
   @override
   void initState() {
@@ -166,227 +163,224 @@ class _AbsentFormState extends State<AbsentForm> {
             topRight: Radius.circular(30.0),
           ),
         ),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 20, top: 0),
-                child: Text(
-                  "Pilih Lama Izin :",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Nunito',
-                    fontWeight: FontWeight.w400,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+            Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 0),
+            child: Text(
+              "Pilih Lama Izin :",
+              style: TextStyle(
+                fontSize: 15,
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.only(left: 9),
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(AntDesign.calendar),
+                    onPressed: () {
+                      _selectDate(context);
+                    },
                   ),
-                ),
-              ),
-              Padding(
-                  padding: EdgeInsets.only(left: 9),
-                  child: Row(
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(AntDesign.calendar),
-                        onPressed: () {
-                          _selectDate(context);
-                        },
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(
-                            top: 5, bottom: 5, left: 15, right: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.blue[100],
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.blue[100],
-                              spreadRadius: 3,
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          "${firstDate} s/d ${lastDate}",
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontFamily: 'Nunito',
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  )),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  "Keterangan :",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Nunito'),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: DropdownButton(
-                  hint: Text(
-                    "- Pilih Keterangan -",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Nunito',
-                    ),
-                  ),
-                  value: typeValue,
-                  items: types.map((value) {
-                    return DropdownMenuItem(
-                      child: new Text(value),
-                      value: value,
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      typeValue = value;
-                    });
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  "Catatan :",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Nunito',
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: TextField(
-                  controller: noteController,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Nunito'),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Text('Upload File :'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  _openFileExplorer();
-                },
-                child: Container(
-                        padding: EdgeInsets.only(
-                            top: 5, bottom: 5, left: 15, right: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.blue[100],
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.blue[100],
-                              spreadRadius: 3,
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          "Browse...",
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontFamily: 'Nunito',
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-              ),
-              Builder(
-                builder: (BuildContext context) => _loadingPath
-                    ? Padding(
-                        padding: EdgeInsets.only(bottom: 10.0),
-                        child: CircularProgressIndicator())
-                    : _path != null || _paths != null
-                        ? Container(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            height: MediaQuery.of(context).size.height * 0.20,
-                            child: Scrollbar(
-                                child: ListView.separated(
-                              itemCount: _paths != null && _paths.isNotEmpty
-                                  ? _paths.length
-                                  : 1,
-                              itemBuilder: (BuildContext context, int index) {
-                                final bool isMultiPath =
-                                    _paths != null && _paths.isNotEmpty;
-                                final String name = 'File $index: ' +
-                                    (isMultiPath
-                                        ? _paths.keys.toList()[index]
-                                        : _fileName ?? '...');
-                                final path = isMultiPath
-                                    ? _paths.values.toList()[index].toString()
-                                    : _path;
-
-                                return ListTile(
-                                  title: Text(
-                                    name,
-                                  ),
-                                  subtitle: Text(path),
-                                );
-                              },
-                              separatorBuilder:
-                                  (BuildContext context, int index) =>
-                                     Divider(),
-                            )),
-                          )
-                        : Container(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: FlatButton(
-                  onPressed: () {
-                    if (firstDate == '' || lastDate == '' || typeValue == '') {
-                      showAlertDialog('Failed', 'Input Data Dengan Benar',
-                          DialogType.ERROR, context, () {});
-                    } else {
-                      progressDialog.show();
-                      Future.delayed(Duration(seconds: 2)).then((value) {
-                        // progressDialog.update(message: "Menyambungkan");
-                        absent(noteController.text);
-                        progressDialog.hide();
-                      });
-                    }
-                  },
-                  textColor: Colors.white,
-                  padding: EdgeInsets.all(0.0),
-                  child: Container(
+                  Container(
+                    padding:
+                        EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Color(0xFF2979FF),
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.blue[100],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue[100],
+                          spreadRadius: 3,
+                        ),
+                      ],
                     ),
-                    //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    width: double.infinity,
-                    alignment: Alignment.center,
                     child: Text(
-                      'Simpan',
+                      "${firstDate} s/d ${lastDate}",
                       style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: "Nunito"),
+                          color: Colors.blue,
+                          fontFamily: 'Nunito',
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
+                ],
+              )),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              "Keterangan :",
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Nunito'),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: DropdownButton(
+              hint: Text(
+                "- Pilih Keterangan -",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Nunito',
                 ),
-              )
-            ]));
+              ),
+              value: typeValue,
+              items: types.map((value) {
+                return DropdownMenuItem(
+                  child: new Text(value),
+                  value: value,
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  typeValue = value;
+                });
+              },
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              "Catatan :",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Nunito',
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: TextField(
+              controller: noteController,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Nunito'),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: Text('Upload File :'),
+          ),
+          FlatButton(
+            onPressed: () {
+              _openFileExplorer();
+            },
+            child: Container(
+              padding: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.blue[100],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blue[100],
+                    spreadRadius: 3,
+                  ),
+                ],
+              ),
+              child: Text(
+                "Browse...",
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontFamily: 'Nunito',
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          Builder(
+            builder: (BuildContext context) => _loadingPath
+                ? Padding(
+                    padding: EdgeInsets.only(bottom: 10.0),
+                    child: CircularProgressIndicator())
+                : _path != null || _paths != null
+                    ? Container(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        height: MediaQuery.of(context).size.height * 0.20,
+                        child: Scrollbar(
+                            child: ListView.separated(
+                          itemCount: _paths != null && _paths.isNotEmpty
+                              ? _paths.length
+                              : 1,
+                          itemBuilder: (BuildContext context, int index) {
+                            final bool isMultiPath =
+                                _paths != null && _paths.isNotEmpty;
+                            final String name = 'File $index: ' +
+                                (isMultiPath
+                                    ? _paths.keys.toList()[index]
+                                    : _fileName ?? '...');
+                            final path = isMultiPath
+                                ? _paths.values.toList()[index].toString()
+                                : _path;
+
+                            return ListTile(
+                              title: Text(
+                                name,
+                              ),
+                              subtitle: Text(path),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              Divider(),
+                        )),
+                      )
+                    : Container(),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: FlatButton(
+              onPressed: () {
+                if (firstDate == '' || lastDate == '' || typeValue == '') {
+                  showAlertDialog('Failed', 'Input Data Dengan Benar',
+                      DialogType.ERROR, context, () {});
+                } else {
+                  progressDialog.show();
+                  Future.delayed(Duration(seconds: 2)).then((value) {
+                    // progressDialog.update(message: "Menyambungkan");
+                    absent(noteController.text);
+                    progressDialog.hide();
+                  });
+                }
+              },
+              textColor: Colors.white,
+              padding: EdgeInsets.all(0.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color(0xFF2979FF),
+                ),
+                //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: Text(
+                  'Simpan',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: "Nunito"),
+                ),
+              ),
+            ),
+          )
+        ]));
   }
 
   // Method memilih tanggal

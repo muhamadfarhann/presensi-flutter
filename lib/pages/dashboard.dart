@@ -16,6 +16,7 @@ import 'package:presensi/pages/login_page.dart';
 import 'package:presensi/pages/multi_todo_form.dart';
 import 'package:presensi/pages/profile.dart';
 import 'package:presensi/pages/report_absent.dart';
+import 'package:presensi/pages/riwayat_todo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
@@ -422,7 +423,8 @@ class _DashboardState extends State<Dashboard> {
                 break;
 
               case 3:
-
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RiwayatTodo()));
                 break;
 
               case 4:

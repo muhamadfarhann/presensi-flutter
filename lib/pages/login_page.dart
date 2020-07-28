@@ -20,6 +20,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  String bullet = "\u2022 ";
   String _error;
   bool _isLoading = false;
   AppConfig config = new AppConfig();
@@ -103,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
       'password': password,
       'client_id': '2',
       'grant_type': 'password',
-      'client_secret': 'CnMt4uRImKp2FOrklEvS38I5xBMRT1CQXNxco6Me'
+      'client_secret': 'SW9uL4QFXM81iHO85ioiIVazyGfLopXpWqmQK47M'
     };
 
     var jsonResponse = null;
@@ -209,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.all(Radius.circular(10),
                   )
                 ),
-                hintText: "example@gmail.com",
+                hintText: "user@example.com",
                 fillColor: Color(0xfff3f3f4),
                 filled: false,
             ),
@@ -247,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.all(Radius.circular(10),
                   )
                 ),
-                hintText: "Input Password",
+                hintText: '${bullet}${bullet}${bullet}${bullet}${bullet}${bullet}',
                 fillColor: Color(0xfff3f3f4),
                 filled: false,
             ),

@@ -2,6 +2,6 @@
 class AppConfig {
 
   // Membuat variabel
-  final String apiURL = "http://192.168.1.7:8000";
+  final String apiURL = "http://192.168.1.12:8000";
 
 }
