@@ -15,6 +15,7 @@ import 'package:presensi/pages/card_menu.dart';
 import 'package:presensi/pages/login_page.dart';
 import 'package:presensi/pages/multi_todo_form.dart';
 import 'package:presensi/pages/profile.dart';
+import 'package:presensi/pages/rekap_kehadiran.dart';
 import 'package:presensi/pages/report_absent.dart';
 import 'package:presensi/pages/riwayat_todo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -438,7 +439,8 @@ class _DashboardState extends State<Dashboard> {
                 break;
 
               case 6:
-
+                 Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RekapKehadiran()));
                 break;
 
               case 7:

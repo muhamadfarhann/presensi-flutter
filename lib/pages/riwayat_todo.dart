@@ -19,6 +19,8 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
   String firstDate = "";
   String lastDate = "";
 
+  List todoDetail;
+  String bullet = "\u2022 ";
   // Method memilih tanggal
   Future<Null> _selectDate(BuildContext context) async {
     final List<DateTime> picked = await DateRangePicker.showDatePicker(
@@ -48,8 +50,7 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
       "last_date": ld,
     };
 
-    var res =
-        await http.post("${config.apiURL}/api/todo/periode", body: data);
+    var res = await http.post("${config.apiURL}/api/todo/periode", body: data);
 
     setState(() {
       //RESPONSE YANG DIDAPATKAN DARI API TERSEBUT DI DECODE
@@ -127,8 +128,9 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
                             color: Color(0xFF2979FF),
                             elevation: 0,
                             child: InkWell(
-                              onTap: (){
-                                _showMaterialDialog();
+                              onTap: () {
+                                getDetail(todo[index]['date']);
+                                // _showMaterialDialog(todo[index]['date']);
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(7),
@@ -149,12 +151,10 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
                                                     ),
                                                     //Hari dan Tanggal
                                                     todoDate(
-                                                        todo[index]
-                                                            ['date']),
+                                                        todo[index]['date']),
                                                     Spacer(),
                                                     todoCount(
-                                                        todo[index]
-                                                            ['amount']),
+                                                        todo[index]['amount']),
                                                     SizedBox(
                                                       width: 10,
                                                     ),
@@ -163,7 +163,6 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
                                                     )
                                                   ],
                                                 ),
-                                                
                                               ],
                                             ))
                                       ],
@@ -318,12 +317,45 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
     );
   }
 
- _showMaterialDialog() {
+  _showMaterialDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            title: Text('Keterangan'),
+            content: Container(
+              height: 200.0,
+              width: 400.0,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: todoDetail == null ? 0 : todoDetail.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text(todoDetail[index]['todo']),
+                    onTap: () {},
+                  );
+                },
+              ),
+            ),
+            actions: <Widget>[
+                FlatButton(
+                  child: Text('Okay!'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+          );
+        });
+  }
+
+  _body(date) {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
               title: new Text("Material Dialog"),
-              content: new Text("Hey! I'm Coflutter!"),
+              content: _body(date),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Close me!'),
@@ -335,5 +367,26 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
             ));
   }
 
+  Future<String> getDetail(String dt) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String id = sharedPreferences.getInt("employee_id").toString();
 
+    Map data = {
+      "employee_id": id,
+      "date": dt
+    };
+
+    var res = await http.post("${config.apiURL}/api/todo/detail", body: data);
+
+    setState(() {
+      //RESPONSE YANG DIDAPATKAN DARI API TERSEBUT DI DECODE
+      var content = json.decode(res.body);
+      //KEMUDIAN DATANYA DISIMPAN KE DALAM VARIABLE data,
+      //DIMANA SECARA SPESIFIK YANG INGIN KITA AMBIL ADALAH ISI DARI KEY hasil
+      todoDetail = content['data'];
+      _showMaterialDialog();
+
+    });
+    return 'success!';
+  }
 }
