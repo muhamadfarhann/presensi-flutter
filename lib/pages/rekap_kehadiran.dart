@@ -82,7 +82,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 80),
             child: Text(
-              'Riwayat Todo',
+              'Rekap Kehadiran',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -123,17 +123,17 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
   }
 
   Widget _buildInfoCard(context) {
-    return Column(
+    return Stack(
       children: <Widget>[
         Container(
           padding: EdgeInsets.only(top: 15, left: 10, right: 10),
           child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.only(
+              padding: EdgeInsets.only(
                   top: 16.0, bottom: 16.0, right: 10.0, left: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -141,15 +141,22 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
                   Column(
                     children: <Widget>[
                       Text(
-                        'Jam Masuk',
+                        'NIK',
                         style: TextStyle(
                             fontSize: 15.0,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Nunito'),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
-                        child: Text("XXXX"),
+                        child: Text(
+                          "170513027",
+                          style: TextStyle(
+                              fontFamily: 'Nunito',
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w300),
+                        ),
                         // child: FutureBuilder<User>(
                         //   future: user,
                         //   builder: (context, snapshot) {
@@ -167,15 +174,22 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
                   Column(
                     children: <Widget>[
                       Text(
-                        'Jam Keluar',
+                        'Nama',
                         style: TextStyle(
                             fontSize: 15.0,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Nunito'),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 6.0),
-                        child: Text("XNXX"),
+                        padding: EdgeInsets.only(top: 6.0),
+                        child: Text(
+                          "Muhamad Farhan",
+                          style: TextStyle(
+                              fontFamily: 'Nunito',
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w300),
+                        ),
                         // child: FutureBuilder<User>(
                         //   future: user,
                         //   builder: (context, snapshot) {
@@ -189,7 +203,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
                         // ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -200,68 +214,138 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
   }
 
   Widget _buildInfo(BuildContext context, double width) {
+    final height = MediaQuery.of(context).size.height * 0.7;
     return Container(
+      height: height,
       padding: EdgeInsets.all(10),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      child: Card( 
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
         color: Colors.white,
         child: Container(
           alignment: Alignment.topLeft,
           padding: EdgeInsets.all(15),
-          child: Column(
+          child: ListView(
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.email, color: Color(0xFF2979FF)),
                 title: Text("Email",
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Nunito'
+                    ),
+                ),
                 subtitle: Text("Email",
-                    style: TextStyle(fontSize: 15, color: Colors.black54)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black54,
+                      fontFamily: 'Nunito'
+                    ),
+                ),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.phone, color: Color(0xFF2979FF)),
                 title: Text("Telepon",
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Nunito'
+                    ),
+                ),
                 subtitle: Text("Telepon",
-                    style: TextStyle(fontSize: 15, color: Colors.black54)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black54,
+                      fontFamily: 'Nunito'
+                    ),
+                ),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                 title: Text("Alamat",
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Nunito'
+                      ),
+                ),
                 subtitle: Text("Alamat",
-                    style: TextStyle(fontSize: 15, color: Colors.black54)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black54,
+                      fontFamily: 'Nunito'
+                    )
+                ),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                 title: Text("Alamat",
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Nunito'
+                      ),
+                ),
                 subtitle: Text("Alamat",
-                    style: TextStyle(fontSize: 15, color: Colors.black54)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black54,
+                      fontFamily: 'Nunito'
+                      ),
+                ),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                 title: Text("Alamat",
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Nunito'
+                    )
+                ),
                 subtitle: Text("Alamat",
-                    style: TextStyle(fontSize: 15, color: Colors.black54)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black54,
+                      fontFamily: 'Nunito'
+                    )
+                ),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                 title: Text("Alamat",
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Nunito'
+                    )
+                ),
                 subtitle: Text("Alamat",
-                    style: TextStyle(fontSize: 15, color: Colors.black54)),
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: Colors.black54,
+                      fontFamily: 'Nunito'
+                    ),
+                ),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                 title: Text("Alamat",
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                    style: TextStyle(fontSize: 15, color: Colors.black)),
                 subtitle: Text("Alamat",
                     style: TextStyle(fontSize: 15, color: Colors.black54)),
               ),

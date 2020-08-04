@@ -407,7 +407,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
-
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: Container(

@@ -175,7 +175,6 @@ class _DashboardState extends State<Dashboard> {
               ),
 
               // Right Tab bar icons
-
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -240,7 +239,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           Container(
-            height: 320.0,
+            height: 350.0,
             child: GridView(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   mainAxisSpacing: 30.0,
