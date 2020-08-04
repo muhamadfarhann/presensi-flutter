@@ -403,31 +403,54 @@ class _AbsentFormState extends State<AbsentForm> {
 
   // Method untuk melakukan izin, cuti, dll
   absent(String note) async {
-    Map data = {
-      "employee_id": sharedPreferences.getInt("employee_id").toString(),
-      "type": typeValue,
-      "firstDate": firstDate,
-      "lastDate": lastDate,
-      "note": note,
-    };
-
-    print(data);
+    // Map data = {
+    //   "employee_id": sharedPreferences.getInt("employee_id").toString(),
+    //   "type": typeValue,
+    //   "firstDate": firstDate,
+    //   "lastDate": lastDate,
+    //   "note": note,
+    // };
 
     var jsonResponse = null;
-    var response =
-        await http.post("${config.apiURL}/api/absent/store", body: data);
-    if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
+    var uri = Uri.parse("${config.apiURL}/api/absent/store");
+    var request = new http.MultipartRequest("POST", uri);
+
+    request.files.add(await http.MultipartFile.fromPath('file', _path));
+    request.fields['employee_id'] = sharedPreferences.getInt("employee_id").toString();
+    request.fields['type'] = typeValue;
+    request.fields['firstDate'] = firstDate;
+    request.fields['lastDate'] = lastDate;
+    request.fields['note'] = note;
+    
+    var response = await request.send();
+    var responseData = await response.stream.toBytes();
+    var responseString = String.fromCharCodes(responseData);
+    var result = json.decode(responseString);
+    print(result['message']);
+
+    if (result['status'] == 200) {
       showAlertDialog(
-          'Success', jsonResponse['message'], DialogType.SUCCES, context, () {
+          'Success', result['message'], DialogType.SUCCES, context, () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Dashboard()));
       });
     } else {
-      jsonResponse = json.decode(response.body);
       showAlertDialog(
-          'Failed', jsonResponse['message'], DialogType.ERROR, context, () {});
+          'Failed', result['message'], DialogType.ERROR, context, () {});
     }
+    // if (response.statusCode == 200) {
+    //   jsonResponse = json.decode(response.body);
+    //   print(jsonResponse['message']);
+    //   showAlertDialog(
+    //       'Success', jsonResponse['message'], DialogType.SUCCES, context, () {
+    //     Navigator.push(
+    //         context, MaterialPageRoute(builder: (context) => Dashboard()));
+    //   });
+    // } else {
+    //   jsonResponse = json.decode(response.body);
+    //   showAlertDialog(
+    //       'Failed', jsonResponse['message'], DialogType.ERROR, context, () {});
+    // }
   }
 
   void showAlertDialog(String title, String message, DialogType dialogType,
