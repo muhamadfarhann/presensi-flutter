@@ -230,7 +230,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.email, color: Color(0xFF2979FF)),
-                title: Text("Email",
+                title: Text("Total Tepat Waktu",
                     style: TextStyle(
                       fontSize: 15, 
                       color: Colors.black,
@@ -249,7 +249,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
               Divider(),
               ListTile(
                 leading: Icon(Icons.phone, color: Color(0xFF2979FF)),
-                title: Text("Telepon",
+                title: Text("Total Kesiangan",
                     style: TextStyle(
                       fontSize: 15, 
                       color: Colors.black,
@@ -268,7 +268,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
-                title: Text("Alamat",
+                title: Text("Total Alpha",
                     style: TextStyle(
                       fontSize: 15, 
                       color: Colors.black,
@@ -287,7 +287,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
-                title: Text("Alamat",
+                title: Text("Total Sakit",
                     style: TextStyle(
                       fontSize: 15, 
                       color: Colors.black,
@@ -306,7 +306,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
-                title: Text("Alamat",
+                title: Text("Total Izin",
                     style: TextStyle(
                       fontSize: 15, 
                       color: Colors.black,
@@ -325,7 +325,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
-                title: Text("Alamat",
+                title: Text("Total Cuti",
                     style: TextStyle(
                       fontSize: 15, 
                       color: Colors.black,

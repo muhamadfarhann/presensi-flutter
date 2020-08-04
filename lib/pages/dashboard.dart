@@ -229,7 +229,7 @@ class _DashboardState extends State<Dashboard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "Kategori",
+                  "Menu",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 22.0,
@@ -246,9 +246,9 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisCount: 3,
                   childAspectRatio: 3 / 2),
               children: <Widget>[
-                gridItem(AntDesign.filetext1, "TODO", 1),
+                gridItem(AntDesign.filetext1, "Todo", 1),
                 gridItem(AntDesign.solution1, "Lapor Absensi", 2),
-                gridItem(AntDesign.laptop, "Riwayat TODO", 3),
+                gridItem(AntDesign.laptop, "Riwayat Todo", 3),
                 gridItem(AntDesign.calendar, "Riwayat Presensi", 4),
                 gridItem(AntDesign.dotchart, "Riwayat Absensi", 5),
                 gridItem(AntDesign.linechart, "Rekap Kehadiran", 6),
@@ -357,7 +357,9 @@ class _DashboardState extends State<Dashboard> {
                             Text(
                               "Hi, ${snapshot.data.name}\nYou are ${snapshot.data.position}",
                               style: TextStyle(
-                                  color: Colors.white, fontFamily: 'Nunito'),
+                                  color: Colors.white,
+                                  fontFamily: 'Nunito'
+                              ),
                             ),
                           ];
 
