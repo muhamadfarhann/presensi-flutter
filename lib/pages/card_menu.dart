@@ -196,9 +196,9 @@ class _CardMenuState extends State<CardMenu> {
             foregroundColor: Colors.white,
             backgroundColor: Color(0xFF2979FF),
           ),
-        ));
+        )
+      );
   }
-
   _top() {
     return Container(
       padding: EdgeInsets.only(top: 35, bottom: 10),

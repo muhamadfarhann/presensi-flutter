@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:presensi/configs/app_config.dart';
+import 'package:presensi/models/recap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
@@ -17,6 +18,8 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
   AppConfig config = new AppConfig();
   String firstDate = "";
   String lastDate = "";
+  dynamic recap = new List<String>();
+  int hasData = 0;
 
   @override
   void initState() {
@@ -44,9 +47,10 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
                 SizedBox(
                   height: 20,
                 ),
+                _periode(),
                 _buildInfoCard(context),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 _buildInfo(context, widthC),
               ],
@@ -117,9 +121,34 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
         var formatter = new DateFormat('dd-MM-yyyy');
         firstDate = formatter.format(picked[0]).toLowerCase();
         lastDate = formatter.format(picked[1]).toLowerCase();
-        // this.getData(firstDate, lastDate);
+        this.getData(firstDate, lastDate);
       });
     }
+  }
+
+  Widget _periode() {
+    return Container(
+      padding: EdgeInsets.only(
+                          top: 5, bottom: 5, left: 15, right: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: Colors.blue[100],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue[100],
+            spreadRadius: 3,
+          ),
+        ],
+      ),
+      child: Text(
+        "Periode : ${firstDate} s/d ${lastDate}",
+        style: TextStyle(
+            color: Colors.blue,
+            fontFamily: 'Nunito',
+            fontSize: 15,
+            fontWeight: FontWeight.bold),
+      ),
+    );
   }
 
   Widget _buildInfoCard(context) {
@@ -150,13 +179,16 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
-                        child: Text(
-                          "170513027",
-                          style: TextStyle(
-                              fontFamily: 'Nunito',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w300),
-                        ),
+                        child: hasData == 1
+                            ? Text(
+                                recap['code'],
+                                style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w300),
+                              )
+                            : Text(""),
+
                         // child: FutureBuilder<User>(
                         //   future: user,
                         //   builder: (context, snapshot) {
@@ -183,24 +215,29 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 6.0),
-                        child: Text(
-                          "Muhamad Farhan",
-                          style: TextStyle(
-                              fontFamily: 'Nunito',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w300),
-                        ),
-                        // child: FutureBuilder<User>(
-                        //   future: user,
-                        //   builder: (context, snapshot) {
-                        //     if (snapshot.hasData) {
-                        //       return Text(snapshot.data.timeOut);
-                        //     } else if (snapshot.hasError) {
-                        //       return Text("${snapshot.error}");
-                        //     }
-                        //     return CircularProgressIndicator();
-                        //   },
-                        // ),
+                        child: hasData == 1
+                            ? Text(
+                                recap['name'],
+                                style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w300),
+                              )
+                            : Text(""),
+                        //   child: FutureBuilder<Recap>(
+                        //     future: recap,
+                        //     builder: (context, snapshot) {
+                        //       print(recap);
+                        //       if (snapshot.hasData) {
+                        //         return Text(snapshot.data.name);
+                        //       } else if (snapshot.hasError) {
+                        //         return Text("tes");
+                        //       } else {
+                        //         return Text("");
+                        //       }
+                        //       return CircularProgressIndicator();
+                        //     },
+                        //   ),
                       ),
                     ],
                   ),
@@ -214,11 +251,11 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
   }
 
   Widget _buildInfo(BuildContext context, double width) {
-    final height = MediaQuery.of(context).size.height * 0.7;
+    final height = MediaQuery.of(context).size.height * 0.6;
     return Container(
       height: height,
       padding: EdgeInsets.all(10),
-      child: Card( 
+      child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
@@ -230,129 +267,154 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.email, color: Color(0xFF2979FF)),
-                title: Text("Total Tepat Waktu",
-                    style: TextStyle(
-                      fontSize: 15, 
+                title: Text(
+                  "Total Kehadiran",
+                  style: TextStyle(
+                      fontSize: 15,
                       color: Colors.black,
                       fontWeight: FontWeight.w700,
-                      fontFamily: 'Nunito'
-                    ),
+                      fontFamily: 'Nunito'),
                 ),
-                subtitle: Text("Email",
-                    style: TextStyle(
-                      fontSize: 15, 
-                      color: Colors.black54,
-                      fontFamily: 'Nunito'
-                    ),
-                ),
+                subtitle: hasData == 1
+                    ? Text(
+                        "${recap['present']} Hari",
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                            fontFamily: 'Nunito'),
+                      )
+                    : Text("Pilih Periode"),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.phone, color: Color(0xFF2979FF)),
-                title: Text("Total Kesiangan",
-                    style: TextStyle(
-                      fontSize: 15, 
+                title: Text(
+                  "Total Terlambat",
+                  style: TextStyle(
+                      fontSize: 15,
                       color: Colors.black,
                       fontWeight: FontWeight.w700,
-                      fontFamily: 'Nunito'
-                    ),
+                      fontFamily: 'Nunito'),
                 ),
-                subtitle: Text("Telepon",
-                    style: TextStyle(
-                      fontSize: 15, 
-                      color: Colors.black54,
-                      fontFamily: 'Nunito'
-                    ),
-                ),
+                subtitle: hasData == 1
+                    ? Text(
+                        "${recap['overdue']} Hari",
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                            fontFamily: 'Nunito'),
+                      )
+                    : Text("Pilih Periode"),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
-                title: Text("Total Alpha",
-                    style: TextStyle(
-                      fontSize: 15, 
+                title: Text(
+                  "Total Alpha",
+                  style: TextStyle(
+                      fontSize: 15,
                       color: Colors.black,
                       fontWeight: FontWeight.w700,
-                      fontFamily: 'Nunito'
-                      ),
+                      fontFamily: 'Nunito'),
                 ),
-                subtitle: Text("Alamat",
-                    style: TextStyle(
-                      fontSize: 15, 
-                      color: Colors.black54,
-                      fontFamily: 'Nunito'
-                    )
-                ),
+                subtitle: hasData == 1
+                    ? Text(
+                        "${recap['alpha']} Hari",
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                            fontFamily: 'Nunito'),
+                      )
+                    : Text("Pilih Periode"),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
-                title: Text("Total Sakit",
-                    style: TextStyle(
-                      fontSize: 15, 
+                title: Text(
+                  "Total Sakit",
+                  style: TextStyle(
+                      fontSize: 15,
                       color: Colors.black,
                       fontWeight: FontWeight.w700,
-                      fontFamily: 'Nunito'
-                      ),
+                      fontFamily: 'Nunito'),
                 ),
-                subtitle: Text("Alamat",
-                    style: TextStyle(
-                      fontSize: 15, 
-                      color: Colors.black54,
-                      fontFamily: 'Nunito'
-                      ),
-                ),
+                subtitle: hasData == 1
+                    ? Text(
+                        "${recap['sick']} Hari",
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                            fontFamily: 'Nunito'),
+                      )
+                    : Text("Pilih Periode"),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                 title: Text("Total Izin",
                     style: TextStyle(
-                      fontSize: 15, 
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Nunito'
-                    )
-                ),
-                subtitle: Text("Alamat",
-                    style: TextStyle(
-                      fontSize: 15, 
-                      color: Colors.black54,
-                      fontFamily: 'Nunito'
-                    )
-                ),
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Nunito')),
+                subtitle: hasData == 1
+                    ? Text(
+                        "${recap['permit']} Hari",
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                            fontFamily: 'Nunito'),
+                      )
+                    : Text("Pilih Periode"),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                 title: Text("Total Cuti",
                     style: TextStyle(
-                      fontSize: 15, 
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Nunito'
-                    )
-                ),
-                subtitle: Text("Alamat",
-                    style: TextStyle(
-                      fontSize: 15, 
-                      color: Colors.black54,
-                      fontFamily: 'Nunito'
-                    ),
-                ),
-              ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.home, color: Color(0xFF2979FF)),
-                title: Text("Alamat",
-                    style: TextStyle(fontSize: 15, color: Colors.black)),
-                subtitle: Text("Alamat",
-                    style: TextStyle(fontSize: 15, color: Colors.black54)),
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Nunito')),
+                subtitle: hasData == 1
+                    ? Text(
+                        "${recap['furlough']} Hari",
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                            fontFamily: 'Nunito'),
+                      )
+                    : Text("Pilih Periode"),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<String> getData(String fd, String ld) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String id = sharedPreferences.getInt("employee_id").toString();
+
+    Map data = {
+      "employee_id": id,
+      "first_date": fd,
+      "last_date": ld,
+    };
+    var response =
+        await http.post("${config.apiURL}/api/attendance/recap", body: data);
+
+    setState(() {
+      //RESPONSE YANG DIDAPATKAN DARI API TERSEBUT DI DECODE
+      var content = json.decode(response.body);
+      // print(content['data']);
+      //KEMUDIAN DATANYA DISIMPAN KE DALAM VARIABLE data,
+      //DIMANA SECARA SPESIFIK YANG INGIN KITA AMBIL ADALAH ISI DARI KEY hasil
+      recap = content['data'];
+      hasData = 1;
+      print(recap['code']);
+    });
+    return 'success!';
   }
 }
