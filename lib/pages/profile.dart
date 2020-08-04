@@ -170,15 +170,23 @@ class _ProfileState extends State<Profile> {
                         style: TextStyle(
                             fontSize: 15.0,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold),
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.bold
+                        ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 6.0),
+                        padding: EdgeInsets.only(top: 6.0),
                         child: FutureBuilder<User>(
                           future: user,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              return Text(snapshot.data.timeIn);
+                              return Text(
+                                snapshot.data.timeIn,
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontWeight: FontWeight.w400
+                                ),
+                              );
                             } else if (snapshot.hasError) {
                               return Text("${snapshot.error}");
                             }
@@ -195,7 +203,9 @@ class _ProfileState extends State<Profile> {
                         style: TextStyle(
                             fontSize: 15.0,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold),
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.bold
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
@@ -203,7 +213,13 @@ class _ProfileState extends State<Profile> {
                           future: user,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              return Text(snapshot.data.timeOut);
+                              return Text(
+                                snapshot.data.timeOut,
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontWeight: FontWeight.w400
+                                ),
+                              );
                             } else if (snapshot.hasError) {
                               return Text("${snapshot.error}");
                             }
@@ -237,12 +253,20 @@ class _ProfileState extends State<Profile> {
                     style: TextStyle(
                         fontSize: 20,
                         color: Colors.white,
-                        fontWeight: FontWeight.bold)),
-                SizedBox(height: 10),
+                        fontFamily: 'Nunito',
+                        fontWeight: FontWeight.w700
+                    )
+                ),
+                SizedBox(
+                  height: 5
+                ),
                 Text('${snapshot.data.status} - ${snapshot.data.position}',
                     style: TextStyle(
                         color: Colors.grey.shade50,
-                        fontStyle: FontStyle.italic))
+                        fontFamily: 'Nunito',
+                        fontStyle: FontStyle.italic
+                    ),
+                ),
               ];
               return Center(child: Column(children: children));
             }
@@ -269,25 +293,57 @@ class _ProfileState extends State<Profile> {
                   ListTile(
                     leading: Icon(Icons.email, color: Color(0xFF2979FF)),
                     title: Text("Email",
-                        style: TextStyle(fontSize: 18, color: Colors.black)),
+                        style: TextStyle(
+                          fontSize: 15, 
+                          color: Colors.black,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w700
+                        ),
+                    ),
                     subtitle: Text(snapshot.data.email,
-                        style: TextStyle(fontSize: 15, color: Colors.black54)),
+                        style: TextStyle(
+                          fontSize: 15, 
+                          color: Colors.black54,
+                          fontFamily: 'Nunito'
+                        ),
+                    ),
                   ),
                   Divider(),
                   ListTile(
                     leading: Icon(Icons.phone, color: Color(0xFF2979FF)),
                     title: Text("Telepon",
-                        style: TextStyle(fontSize: 18, color: Colors.black)),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black
+                        )
+                    ),
                     subtitle: Text(snapshot.data.phone,
-                        style: TextStyle(fontSize: 15, color: Colors.black54)),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Nunito',
+                          color: Colors.black54
+                        )
+                    ),
                   ),
                   Divider(),
                   ListTile(
                     leading: Icon(Icons.home, color: Color(0xFF2979FF)),
                     title: Text("Alamat",
-                        style: TextStyle(fontSize: 18, color: Colors.black)),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black
+                        )
+                    ),
                     subtitle: Text(snapshot.data.address,
-                        style: TextStyle(fontSize: 15, color: Colors.black54)),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Nunito',
+                          color: Colors.black54
+                        )
+                    ),
                   ),
                 ];
                 return Center(child: Column(children: children));
