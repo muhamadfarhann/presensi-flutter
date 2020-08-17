@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     Map data = {
-      'username': email,a
+      'username': email,
       'password': password,
       'client_id': '2',
       'grant_type': 'password',
