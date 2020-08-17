@@ -393,7 +393,7 @@ class _DashboardState extends State<Dashboard> {
               fontSize: 15,
             ),
             decoration: InputDecoration(
-                hintText: "Search anything to do",
+                hintText: "Cari...",
                 fillColor: Colors.white,
                 filled: true,
                 suffixIcon: Icon(Icons.filter_list),

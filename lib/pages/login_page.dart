@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
       'password': password,
       'client_id': '2',
       'grant_type': 'password',
-      'client_secret': 'CnMt4uRImKp2FOrklEvS38I5xBMRT1CQXNxco6Me'
+      'client_secret': 'SW9uL4QFXM81iHO85ioiIVazyGfLopXpWqmQK47M'
     };
 
     var jsonResponse = null;
