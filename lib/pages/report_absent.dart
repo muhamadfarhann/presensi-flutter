@@ -175,19 +175,19 @@ class _ReportAbsentState extends State<ReportAbsent> {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.picture_as_pdf),
-            onPressed: () => {},
-            foregroundColor: Colors.white,
-            backgroundColor: Color(0xFF2979FF),
-          ),
+          // floatingActionButton: FloatingActionButton(
+          //   child: Icon(Icons.picture_as_pdf),
+          //   onPressed: () => {},
+          //   foregroundColor: Colors.white,
+          //   backgroundColor: Color(0xFF2979FF),
+          // ),
         ));
   }
 
   getColor(status) {
     if(status == "Pending") {
       return Colors.orange;
-    } else if(status == "Diterima") {
+    } else if(status == "Disetujui") {
       return Color(0xFF2979FF);
     } else {
       return Colors.red;
