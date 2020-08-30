@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:presensi/configs/app_config.dart';
 import 'package:presensi/pages/dashboard.dart';
@@ -105,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
       'password': password,
       'client_id': '2',
       'grant_type': 'password',
-      'client_secret': 'SW9uL4QFXM81iHO85ioiIVazyGfLopXpWqmQK47M'
+      'client_secret': 'CnMt4uRImKp2FOrklEvS38I5xBMRT1CQXNxco6Me'
     };
 
     var jsonResponse = null;
@@ -131,23 +132,36 @@ class _LoginPageState extends State<LoginPage> {
       final response2 = await http.get('${config.apiURL}/api/user/get-profile',
           headers: requestHeaders);
       final responseJson2 = json.decode(response2.body);
-      sharedPreferences.setInt("employee_id", responseJson2['employee']['id']);
+      DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+      AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
+      final androidDeviceId = androidDeviceInfo.androidId;
+      if(androidDeviceId == responseJson2['device_id']) {
+          sharedPreferences.setInt("employee_id", responseJson2['employee']['id']);
 
-      String timeIn = 'Belum Absen';
-      String timeOut = 'Belum Absen';
+          String timeIn = 'Belum Absen';
+          String timeOut = 'Belum Absen';
 
-      if (responseJson2['employee']['attendance'] != null) {
-        timeIn = responseJson2['employee']['attendance']['time_in'];
-        timeOut =
-            responseJson2['employee']['attendance']['time_out'].toString() !=
-                    null
-                ? responseJson2['employee']['attendance']['time_out']
-                : "Belum Absen";
-      }
-
-      Navigator.of(context).pushAndRemoveUntil(
+          if (responseJson2['employee']['attendance'] != null) {
+            timeIn = responseJson2['employee']['attendance']['time_in'];
+            timeOut =
+                responseJson2['employee']['attendance']['time_out'].toString() !=
+                        null
+                    ? responseJson2['employee']['attendance']['time_out']
+                    : "Belum Absen";
+          }
+          Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => Dashboard()),
           (Route<dynamic> route) => false);
+      } else {
+        showAlertDialog(
+            'Failed', "Device Yang Anda Gunakan Tidak Sesuai Dengan Akun yang Digunakan", DialogType.ERROR, context, () {});
+        sharedPreferences.clear();
+        sharedPreferences.commit();
+        setState(() {
+          _isLoading = false;
+          // _error = jsonResponse["message"];
+        });
+      }
     } else {
       showAlertDialog(
           'Failed', jsonResponse['message'], DialogType.ERROR, context, () {});

@@ -252,7 +252,7 @@ class _DashboardState extends State<Dashboard> {
                 gridItem(AntDesign.calendar, "Riwayat Presensi", 4),
                 gridItem(AntDesign.dotchart, "Riwayat Absensi", 5),
                 gridItem(AntDesign.linechart, "Rekap Kehadiran", 6),
-                gridItem(AntDesign.carryout, "Tutup Buku", 7),
+                // gridItem(AntDesign.carryout, "Tutup Buku", 7),
               ],
             ),
           ),
