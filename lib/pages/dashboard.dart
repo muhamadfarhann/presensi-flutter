@@ -491,6 +491,8 @@ class _DashboardState extends State<Dashboard> {
     try {
       var now = new DateTime.now();
       var newDt = DateFormat.Hms().format(now);
+      var day = DateFormat('EEEE').format(now);
+
       var formatter = new DateFormat('yyyy-MM-dd');
       String myDate = formatter.format(now);
       String qrResult = await BarcodeScanner.scan();
@@ -503,48 +505,54 @@ class _DashboardState extends State<Dashboard> {
       print("Dev ID: ${androidDeviceId}");
       print("Hasil Flutter: ${myDate}");
 
+       if(day == "Saturday" || day == "Sunday") { 
+           var message =
+                "Tidak Dapat Melakukan Kehadiran Pada Hari Sabtu dan Minggu";
+            showAlertDialog('Failed', message, DialogType.ERROR, context, () {});
+       } else {
       // Geolocator
-      if (qrResult == myDate) {
-        final position = await Geolocator()
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+          if (qrResult == myDate) {
+            final position = await Geolocator()
+                .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-        Map data = {
-          "employee_id": sharedPreferences.getInt("employee_id").toString(),
-          "date": myDate.toString(),
-          "time_in": newDt.toString(),
-          "time_out": newDt.toString(),
-          "overdue": "",
-          "note": "",
-          "latitude_in": "${position.latitude}",
-          "longitude_in": "${position.longitude}",
-          "latitude_out": "${position.latitude}",
-          "longitude_out": "${position.longitude}",
-          "device_id": androidDeviceId,
-        };
+            Map data = {
+              "employee_id": sharedPreferences.getInt("employee_id").toString(),
+              "date": myDate.toString(),
+              "time_in": newDt.toString(),
+              "time_out": newDt.toString(),
+              "overdue": "",
+              "note": "",
+              "latitude_in": "${position.latitude}",
+              "longitude_in": "${position.longitude}",
+              "latitude_out": "${position.latitude}",
+              "longitude_out": "${position.longitude}",
+              "device_id": androidDeviceId,
+            };
 
-        var jsonResponse = null;
-        AppConfig config = new AppConfig();
-        var response = await http.post("${config.apiURL}/api/attendance/store",
-            body: data);
+            var jsonResponse = null;
+            AppConfig config = new AppConfig();
+            var response = await http.post("${config.apiURL}/api/attendance/store",
+                body: data);
 
-        print(response.statusCode);
+            print(response.statusCode);
 
-        if (response.statusCode == 200) {
-          jsonResponse = json.decode(response.body);
+            if (response.statusCode == 200) {
+              jsonResponse = json.decode(response.body);
 
-          if (jsonResponse['statusCode'] == 403) {
-            showAlertDialog('Failed', jsonResponse['message'], DialogType.ERROR,
-                context, () {});
+              if (jsonResponse['statusCode'] == 403) {
+                showAlertDialog('Failed', jsonResponse['message'], DialogType.ERROR,
+                    context, () {});
+              } else {
+                showAlertDialog('Success', jsonResponse['message'],
+                    DialogType.SUCCES, context, () {});
+              }
+            }
           } else {
-            showAlertDialog('Success', jsonResponse['message'],
-                DialogType.SUCCES, context, () {});
+            var message =
+                "Tidak Dapat Melakukan Kehadiran, Pastikan QR Code Sesuai";
+            showAlertDialog('Failed', message, DialogType.ERROR, context, () {});
           }
-        }
-      } else {
-        var message =
-            "Tidak Dapat Melakukan Kehadiran, Pastikan QR Code Sesuai";
-        showAlertDialog('Failed', message, DialogType.ERROR, context, () {});
-      }
+       }
       setState(() {
         // attendance = value;
       });
