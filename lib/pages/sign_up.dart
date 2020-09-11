@@ -267,7 +267,12 @@ class _SignUpPageState extends State<SignUpPage> {
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       showAlertDialog('Success', jsonResponse['message'], DialogType.SUCCES,
-          context, () {});
+          context, () {
+            Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => LoginPage()),
+                      (Route<dynamic> route) => false);
+          });
     } else {
       jsonResponse = json.decode(response.body);
       showAlertDialog(
