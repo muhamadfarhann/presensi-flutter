@@ -107,7 +107,7 @@ class _WelcomePageState extends State<WelcomePage> {
           border: Border.all(color: Colors.white, width:2),
         ),
         child: Text(
-          'Register Now',
+          'Daftar Sekarang',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
@@ -145,11 +145,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 spreadRadius: 2
               )
             ],
-            gradient: LinearGradient(
-              begin: Alignment.center,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF29B6FC), Color(0xFF2979FF)]
-            )
+            color: Color(0xFF2979FF),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

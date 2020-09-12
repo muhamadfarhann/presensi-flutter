@@ -185,11 +185,12 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+              child: Icon(Icons.keyboard_arrow_left, color: Colors.white),
             ),
             Text('Back',
                 style: TextStyle(
                     fontSize: 12,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontFamily: 'Nunito'))
           ],
@@ -333,6 +334,7 @@ class _LoginPageState extends State<LoginPage> {
               'Belum Memiliki Akun ?',
               style: TextStyle(
                   fontSize: 13,
+                  color: Colors.white,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Nunito'),
             ),
@@ -340,7 +342,7 @@ class _LoginPageState extends State<LoginPage> {
               width: 10,
             ),
             Text(
-              'Register',
+              'Daftar',
               style: TextStyle(
                   // color: Color(0xFF29B6FC),
                   color: Colors.white,
@@ -470,12 +472,12 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.centerRight,
-                    child: Text('Forgot Password ?',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Nunito',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500)),
+                    // child: Text('Forgot Password ?',
+                    //     style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontFamily: 'Nunito',
+                    //         fontSize: 14,
+                    //         fontWeight: FontWeight.w500)),
                   ),
                   // _divider(),
                   // _facebookButton(),
