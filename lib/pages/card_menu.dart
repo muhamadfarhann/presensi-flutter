@@ -66,116 +66,130 @@ class _CardMenuState extends State<CardMenu> {
     super.initState(); //PANGGIL FUNGSI YANG TELAH DIBUAT SEBELUMNYA
   }
 
+  Future<Null> refresh() async {
+    await Future.delayed(Duration(seconds: 2));
+  }
+
   @override
   Widget build(BuildContext context) {
     print(attendance);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Column(
-        // mainAxisSize: MainAxisSize.max,
-        // mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          _top(),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      home: Scaffold(
+        body: RefreshIndicator(
+          onRefresh: refresh,
+          color: Colors.grey[200],
+          child: Column(
+            // mainAxisSize: MainAxisSize.max,
+            // mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Container(
-                padding:
-                    EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.blue[100],
-                  boxShadow: [
-                    BoxShadow(
+              _top(),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    padding:
+                        EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
                       color: Colors.blue[100],
-                      spreadRadius: 3,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue[100],
+                          spreadRadius: 3,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Text(
-                  "Periode : ${firstDate} s/d ${lastDate}",
-                  style: TextStyle(
-                      color: Colors.blue,
-                      fontFamily: 'Nunito',
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold),
-                ),
+                    child: Text(
+                      "Periode : ${firstDate} s/d ${lastDate}",
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontFamily: 'Nunito',
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: attendance == null ? 0 : attendance.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        height: 150,
+                        width: double.maxFinite,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          color: attendance[index]['overdue'] == 1
+                              ? Colors.redAccent
+                              : Color(0xFF2979FF),
+                          elevation: 0,
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.all(7),
+                              child: Stack(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Padding(
+                                          padding:
+                                              EdgeInsets.only(left: 10, top: 5),
+                                          child: Column(
+                                            children: <Widget>[
+                                              Row(
+                                                children: <Widget>[
+                                                  //icon kalender
+                                                  // attendanceIcon(
+                                                  //     attendance[index]),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  //Hari dan Tanggal
+                                                  attendanceDate(
+                                                      attendance[index]
+                                                          ['date']),
+                                                  Spacer(),
+                                                  attendanceStatus(
+                                                      attendance[index]
+                                                          ['overdue']),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  )
+                                                ],
+                                              ),
+                                              Row(
+                                                children: <Widget>[
+                                                  attendanceTime(
+                                                      attendance[index]
+                                                          ['time_in'],
+                                                      attendance[index]
+                                                          ['time_out'])
+                                                ],
+                                              )
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                )
+                              ]),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
               ),
             ],
           ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: attendance == null ? 0 : attendance.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    height: 150,
-                    width: double.maxFinite,
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      color: attendance[index]['overdue'] == 1
-                          ? Colors.redAccent
-                          : Color(0xFF2979FF),
-                      elevation: 0,
-                      child: Container(
-                        child: Padding(
-                          padding: EdgeInsets.all(7),
-                          child: Stack(children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Stack(
-                                children: <Widget>[
-                                  Padding(
-                                      padding:
-                                          EdgeInsets.only(left: 10, top: 5),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Row(
-                                            children: <Widget>[
-                                              //icon kalender
-                                              // attendanceIcon(
-                                              //     attendance[index]),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              //Hari dan Tanggal
-                                              attendanceDate(
-                                                  attendance[index]['date']),
-                                              Spacer(),
-                                              attendanceStatus(
-                                                  attendance[index]['overdue']),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              SizedBox(
-                                                width: 20,
-                                              )
-                                            ],
-                                          ),
-                                          Row(
-                                            children: <Widget>[
-                                              attendanceTime(
-                                                  attendance[index]['time_in'],
-                                                  attendance[index]['time_out'])
-                                            ],
-                                          )
-                                        ],
-                                      ))
-                                ],
-                              ),
-                            )
-                          ]),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-          ),
-        ],
+        ),
       ),
       // floatingActionButton: FloatingActionButton(
       //   child: Icon(Icons.picture_as_pdf),
