@@ -31,7 +31,6 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
 
   @override
   Widget build(BuildContext context) {
-    var length;
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
