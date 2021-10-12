@@ -67,17 +67,17 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
     super.initState(); //PANGGIL FUNGSI YANG TELAH DIBUAT SEBELUMNYA
   }
 
-  Future<Null> refresh() async {
-    await Future.delayed(Duration(seconds: 2));
-  }
+  // Future<Null> refresh() async {
+  //   await Future.delayed(Duration(seconds: 2));
+  // }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: RefreshIndicator(
-            onRefresh: refresh,
+          body: Container(
+            // onRefresh: refresh,
             color: Colors.grey[200],
             child: Column(
               // mainAxisSize: MainAxisSize.max,
