@@ -13,9 +13,11 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Login',
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
-            bodyText1: GoogleFonts.montserrat(textStyle: textTheme.bodyText1),
-          ),
+          textTheme: GoogleFonts.latoTextTheme(textTheme)
+            // bodyText1: GoogleFonts.montserrat(
+            //   textStyle: textTheme.bodyText1,
+            // ),
+          
         ),
         home: WelcomePage());
   }

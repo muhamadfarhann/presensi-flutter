@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:barcode_scan/barcode_scan.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -121,7 +121,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[200],
       body: PageStorage(
         child: currentScreen == null ? _body() : currentScreen,
@@ -495,7 +495,7 @@ class _DashboardState extends State<Dashboard> {
 
       var formatter = new DateFormat('yyyy-MM-dd');
       String myDate = formatter.format(now);
-      String qrResult = await BarcodeScanner.scan();
+      final qrResult = await BarcodeScanner.scan();
       // print(qrResult);
       print("Hasil QR: ${qrResult}");
 
@@ -557,7 +557,7 @@ class _DashboardState extends State<Dashboard> {
         // attendance = value;
       });
     } on PlatformException catch (ex) {
-      if (ex.code == BarcodeScanner.CameraAccessDenied) {
+      if (ex.code == BarcodeScanner.cameraAccessDenied) {
         result = "Perizinan kamera ditolak";
       } else {
         setState(() {

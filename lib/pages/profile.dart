@@ -28,6 +28,7 @@ class _ProfileState extends State<Profile> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     // String id = sharedPreferences.getInt("employee_id").toString();
     String token = sharedPreferences.getString("token");
+    
     if (token != null) {
       // get User
       var jsonResponse = null;
