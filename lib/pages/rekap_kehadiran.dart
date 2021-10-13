@@ -17,7 +17,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
   AppConfig config = new AppConfig();
   String firstDate = "";
   String lastDate = "";
-  dynamic recap = new List<String>();
+  dynamic recap = List<String>.empty();
   int hasData = 0;
 
   @override
@@ -127,8 +127,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
 
   Widget _periode() {
     return Container(
-      padding: EdgeInsets.only(
-                          top: 5, bottom: 5, left: 15, right: 15),
+      padding: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: Colors.blue[100],
@@ -180,7 +179,7 @@ class _RekapKehadiranState extends State<RekapKehadiran> {
                         padding: const EdgeInsets.only(top: 6.0),
                         child: hasData == 1
                             ? Text(
-                                recap['code'],
+                                recap['code'].int,
                                 style: TextStyle(
                                     fontFamily: 'Nunito',
                                     fontSize: 14.0,

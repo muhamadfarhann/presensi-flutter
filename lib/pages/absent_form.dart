@@ -90,7 +90,7 @@ class _AbsentFormState extends State<AbsentForm> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         body: Container(
           color: Colors.grey[200],
           child: Column(
@@ -279,7 +279,7 @@ class _AbsentFormState extends State<AbsentForm> {
             padding: EdgeInsets.only(left: 20, right: 20),
             child: Text('Upload File :'),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               _openFileExplorer();
             },
@@ -345,7 +345,7 @@ class _AbsentFormState extends State<AbsentForm> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
-            child: FlatButton(
+            child: TextButton(
               onPressed: () {
                 if (firstDate == '' || lastDate == '' || typeValue == '') {
                   showAlertDialog('Failed', 'Input Data Dengan Benar',
@@ -359,15 +359,15 @@ class _AbsentFormState extends State<AbsentForm> {
                   });
                 }
               },
-              textColor: Colors.white,
-              padding: EdgeInsets.all(0.0),
+              // textColor: Colors.white,
               child: Container(
+              padding: EdgeInsets.all(0.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Color(0xFF2979FF),
                 ),
                 //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                // padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Text(

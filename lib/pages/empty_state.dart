@@ -10,13 +10,16 @@ class EmptyState extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       elevation: 16,
       color: Theme.of(context).cardColor.withOpacity(.95),
-      shadowColor: Theme.of(context).accentColor.withOpacity(.5),
+      shadowColor: Colors.blueAccent.withOpacity(.5),
       child: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(title, style: Theme.of(context).textTheme.headline),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.headline2,
+            ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(message),
