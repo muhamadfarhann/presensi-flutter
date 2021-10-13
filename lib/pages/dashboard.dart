@@ -487,7 +487,8 @@ class _DashboardState extends State<Dashboard> {
   }
 
   // Method untuk memulai scan qr
-  Future<Attendance> _scanQR() async {
+  // Future<Attendance> _scanQR() async {
+  _scanQR() async {
     try {
       var now = new DateTime.now();
       var newDt = DateFormat.Hms().format(now);
