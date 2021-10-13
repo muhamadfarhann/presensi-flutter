@@ -339,12 +339,18 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
               ),
             ),
             actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Okay!'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                )
+                ),
+                // FlatButton(
+                //   child: Text('Okay!'),
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
               ],
           );
         });
@@ -357,12 +363,18 @@ class _RiwayatTodoState extends State<RiwayatTodo> {
               title: new Text("Material Dialog"),
               content: _body(date),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Close me!'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                )
+                ),
+                // FlatButton(
+                //   child: Text('Close me!'),
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
               ],
             ));
   }
