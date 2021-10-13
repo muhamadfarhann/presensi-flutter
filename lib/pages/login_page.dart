@@ -21,7 +21,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   String bullet = "\u2022 ";
   String _error;
   bool _isLoading = false;
@@ -135,26 +134,31 @@ class _LoginPageState extends State<LoginPage> {
       DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
       AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
       final androidDeviceId = androidDeviceInfo.androidId;
-      if(androidDeviceId == responseJson2['device_id']) {
-          sharedPreferences.setInt("employee_id", responseJson2['employee']['id']);
+      if (androidDeviceId == responseJson2['device_id']) {
+        sharedPreferences.setInt(
+            "employee_id", responseJson2['employee']['id']);
 
-          String timeIn = 'Belum Absen';
-          String timeOut = 'Belum Absen';
+        String timeIn = 'Belum Absen';
+        String timeOut = 'Belum Absen';
 
-          if (responseJson2['employee']['attendance'] != null) {
-            timeIn = responseJson2['employee']['attendance']['time_in'];
-            timeOut =
-                responseJson2['employee']['attendance']['time_out'].toString() !=
-                        null
-                    ? responseJson2['employee']['attendance']['time_out']
-                    : "Belum Absen";
-          }
-          Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => Dashboard()),
-          (Route<dynamic> route) => false);
+        if (responseJson2['employee']['attendance'] != null) {
+          timeIn = responseJson2['employee']['attendance']['time_in'];
+          timeOut =
+              responseJson2['employee']['attendance']['time_out'].toString() !=
+                      null
+                  ? responseJson2['employee']['attendance']['time_out']
+                  : "Belum Absen";
+        }
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (BuildContext context) => Dashboard()),
+            (Route<dynamic> route) => false);
       } else {
         showAlertDialog(
-            'Failed', "Device Yang Anda Gunakan Tidak Sesuai Dengan Akun yang Digunakan", DialogType.ERROR, context, () {});
+            'Failed',
+            "Device Yang Anda Gunakan Tidak Sesuai Dengan Akun yang Digunakan",
+            DialogType.ERROR,
+            context,
+            () {});
         sharedPreferences.clear();
         sharedPreferences.commit();
         setState(() {
@@ -216,21 +220,21 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
-              controller: emailController,
-              style: TextStyle(
-                fontFamily: "Nunito",
-                fontSize: 15,
-              ),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10),
-                  )
-                ),
-                hintText: "user@example.com",
-                fillColor: Color(0xfff3f3f4),
-                filled: false,
+            controller: emailController,
+            style: TextStyle(
+              fontFamily: "Nunito",
+              fontSize: 15,
             ),
-            )
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              )),
+              hintText: "user@example.com",
+              fillColor: Color(0xfff3f3f4),
+              filled: false,
+            ),
+          )
         ],
       ),
     );
@@ -260,13 +264,14 @@ class _LoginPageState extends State<LoginPage> {
               fontFamily: "Nunito",
             ),
             decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10),
-                  )
-                ),
-                hintText: '${bullet}${bullet}${bullet}${bullet}${bullet}${bullet}',
-                fillColor: Color(0xfff3f3f4),
-                filled: false,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              )),
+              hintText:
+                  '${bullet}${bullet}${bullet}${bullet}${bullet}${bullet}',
+              fillColor: Color(0xfff3f3f4),
+              filled: false,
             ),
           ),
         ],
@@ -279,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(vertical: 15),
       alignment: Alignment.center,
-      child: FlatButton(
+      child: TextButton(
         onPressed: emailController.text == "" || passwordController.text == ""
             ? null
             : () {
@@ -293,8 +298,6 @@ class _LoginPageState extends State<LoginPage> {
                   progressDialog.hide();
                 });
               },
-        textColor: Colors.white,
-        padding: EdgeInsets.all(0.0),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -311,6 +314,38 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+      // child: FlatButton(
+      //   onPressed: emailController.text == "" || passwordController.text == ""
+      //       ? null
+      //       : () {
+      //           setState(() {
+      //             _isLoading = true;
+      //           });
+      //           progressDialog.show();
+      //           Future.delayed(Duration(seconds: 2)).then((value) {
+      //             // progressDialog.update(message: "Menyambungkan");
+      //             signIn(emailController.text, passwordController.text);
+      //             progressDialog.hide();
+      //           });
+      //         },
+      //   textColor: Colors.white,
+      //   padding: EdgeInsets.all(0.0),
+      //   child: Container(
+      //     decoration: BoxDecoration(
+      //       borderRadius: BorderRadius.all(Radius.circular(20)),
+      //       color: Color(0xFF2979FF),
+      //     ),
+      //     //  padding: EdgeInsets.only(left: 143, right: 143, top: 15, bottom: 15),
+      //     padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      //     width: double.infinity,
+      //     alignment: Alignment.center,
+      //     child: Text(
+      //       'Login',
+      //       style: TextStyle(
+      //           fontSize: 15, fontFamily: 'Nunito', color: Colors.white),
+      //     ),
+      //   ),
+      // ),
     );
   }
 
