@@ -79,14 +79,14 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
             ),
             color: Colors.grey[200]),
         child:
-            // TimeOfDayFormat.a_space_h_colon_mm.length <= 0
-            //     ? Center(
-            //         child: EmptyState(
-            //           title: 'Oops',
-            //           message: 'Add form by tapping add button below',
-            //         ),
-            //       )
-            // :
+            TimeOfDayFormat.a_space_h_colon_mm.length <= 0
+                ? Center(
+                    child: EmptyState(
+                      title: 'Oops',
+                      message: 'Add form by tapping add button below',
+                    ),
+                  )
+            :
             ListView.builder(
           addAutomaticKeepAlives: true,
           itemCount: todos.length,
