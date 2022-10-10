@@ -158,26 +158,26 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
           showAlertDialog('Failed', jsonResponse['message'], DialogType.ERROR,
               context, () {});
         }
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     fullscreenDialog: true,
-        //     builder: (_) => Scaffold(
-        //       appBar: AppBar(
-        //         title: Text('List of Todos'),
-        //       ),
-        //       body: ListView.builder(
-        //         itemCount: data.length,
-        //         itemBuilder: (_, i) => ListTile(
-        //           leading: CircleAvatar(
-        //             child: Text(data[i].task.substring(0, 1)),
-        //           ),
-        //           title: Text(data[i].task),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (_) => Scaffold(
+              appBar: AppBar(
+                title: Text('List of Todos'),
+              ),
+              body: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (_, i) => ListTile(
+                  leading: CircleAvatar(
+                    child: Text(data[i].task.substring(0, 1)),
+                  ),
+                  title: Text(data[i].task),
+                ),
+              ),
+            ),
+          ),
+        );
       }
     }
   }
