@@ -463,12 +463,12 @@ class _LoginPageState extends State<LoginPage> {
         body: Container(
       decoration: BoxDecoration(
         color: Color(0xFF2979FF),
-        // borderRadius: BorderRadius.only(
-        //   bottomLeft: Radius.circular(30.0),
-        //   bottomRight: Radius.circular(30.0),
-        //   topLeft: Radius.circular(30.0),
-        //   topRight: Radius.circular(30.0),
-        // ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30.0),
+          bottomRight: Radius.circular(30.0),
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
+        ),
       ),
       height: height,
       child: Stack(

@@ -69,24 +69,24 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
       ),
       body: Container(
         decoration: BoxDecoration(
-            // gradient: LinearGradient(
-            //   colors: [
-            //     Color(0xFF30C1FF),
-            //     Color(0xFF2AA7DC),
-            //   ],
-            //   begin: Alignment.topCenter,
-            //   end: Alignment.bottomCenter,
-            // ),
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF30C1FF),
+                Color(0xFF2AA7DC),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
             color: Colors.grey[200]),
         child:
-            // TimeOfDayFormat.a_space_h_colon_mm.length <= 0
-            //     ? Center(
-            //         child: EmptyState(
-            //           title: 'Oops',
-            //           message: 'Add form by tapping add button below',
-            //         ),
-            //       )
-            // :
+            TimeOfDayFormat.a_space_h_colon_mm.length <= 0
+                ? Center(
+                    child: EmptyState(
+                      title: 'Oops',
+                      message: 'Add form by tapping add button below',
+                    ),
+                  )
+            :
             ListView.builder(
           addAutomaticKeepAlives: true,
           itemCount: todos.length,
@@ -158,26 +158,26 @@ class _MultiTodoFormState extends State<MultiTodoForm> {
           showAlertDialog('Failed', jsonResponse['message'], DialogType.ERROR,
               context, () {});
         }
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     fullscreenDialog: true,
-        //     builder: (_) => Scaffold(
-        //       appBar: AppBar(
-        //         title: Text('List of Todos'),
-        //       ),
-        //       body: ListView.builder(
-        //         itemCount: data.length,
-        //         itemBuilder: (_, i) => ListTile(
-        //           leading: CircleAvatar(
-        //             child: Text(data[i].task.substring(0, 1)),
-        //           ),
-        //           title: Text(data[i].task),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (_) => Scaffold(
+              appBar: AppBar(
+                title: Text('List of Todos'),
+              ),
+              body: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (_, i) => ListTile(
+                  leading: CircleAvatar(
+                    child: Text(data[i].task.substring(0, 1)),
+                  ),
+                  title: Text(data[i].task),
+                ),
+              ),
+            ),
+          ),
+        );
       }
     }
   }
