@@ -119,7 +119,9 @@ class _CardMenuState extends State<CardMenu> {
                     itemCount: attendance == null ? 0 : attendance.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        // Change container padding
+                        padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                        //
                         height: 150,
                         width: double.maxFinite,
                         child: Card(
