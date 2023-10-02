@@ -75,7 +75,9 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         setState(() {
           _isLoading = false;
-          _error = "Terjadi Kesalahan Sistem";
+          // Change error message in login page
+          _error = "Terjadi kesalahan ! Silahkan coba lagi";
+          // 
         });
       }
     }
