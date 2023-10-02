@@ -92,7 +92,9 @@ class _AbsentFormState extends State<AbsentForm> {
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-          color: Colors.grey[200],
+          // Change container color
+          color: Colors.teal[200],
+          // End ??
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
