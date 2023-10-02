@@ -39,7 +39,9 @@ class _DashboardState extends State<Dashboard> {
   String typeValue;
   List<DateTime> datePicked;
   AppConfig config = new AppConfig();
-  List types = ["Izin", "Sakit", "Cuti"];
+  // Add one more types
+  List types = ["Izin", "Sakit", "Cuti", "Alpha"];
+  //
   TextEditingController noteController = TextEditingController();
   Future<User> user;
 
