@@ -65,7 +65,9 @@ class _TodoFormState extends State<TodoForm> {
                     labelText: 'Task',
                     hintText: 'Input Task',
                     icon: Icon(AntDesign.filetext1),
-                    isDense: true,
+                    // Change dense to false
+                    isDense: false,
+                    //
                   ),
                 ),
               ),
